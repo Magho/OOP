@@ -23,7 +23,7 @@ public class CalculatorImpl implements Calculator {
 	private int lengthOfTheformulasLinkedList = formulas.size();
 	private int currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
 	private LinkedList<String> currentFormulas = new LinkedList<String>();
-	
+
 	@Override
 	public void input(String s) {
 		boolean operatorfound = false;
@@ -91,7 +91,7 @@ public class CalculatorImpl implements Calculator {
 				lengthOfTheformulasLinkedList++;
 				currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
 				currentFormulas.addLast(formula);
-				
+
 				formula = null;
 			} catch (Exception e) {
 				System.out.println("exception");
@@ -105,12 +105,7 @@ public class CalculatorImpl implements Calculator {
 
 	@Override
 	public String current() {
-		try {
-			current = formulas.get(currentElementInformulasLinkedList);
-		} catch (Exception e) {
-			System.out.println("exception");
-			e.printStackTrace();// TODO
-		}
+		current = formulas.get(currentElementInformulasLinkedList);
 		return current;
 	}
 
@@ -139,8 +134,7 @@ public class CalculatorImpl implements Calculator {
 		try {
 			savefile();
 		} catch (IOException e) {
-			System.out.println("exception");
-			e.printStackTrace();// TODO
+			throw (null);// TODO
 		}
 	}
 
@@ -148,19 +142,24 @@ public class CalculatorImpl implements Calculator {
 	 * @throws IOException
 	 */
 	private void savefile() throws IOException {
-		int i ;
+		int i;
 		File fout = new File("out.txt");
 		FileOutputStream out = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-		if (currentFormulas.size() >= 5 ) {
+		if (currentFormulas.size() >= 5) {
 			i = formulas.size() - 5;
 		} else {
 			i = 0;
 		}
-		for ( int j = i ; j < currentFormulas.size(); j++) {
+		System.out.println("******************************saved**************************");
+		for (int j = i; j < currentFormulas.size(); j++) {
 			bw.write(currentFormulas.get(j));
+			System.out.println(currentFormulas.get(j));
 			bw.newLine();
 		}
+		bw.write(String.valueOf(currentElementInformulasLinkedList));
+		System.out.println(currentElementInformulasLinkedList);
+		bw.newLine();
 		bw.close();
 	}
 
@@ -169,7 +168,7 @@ public class CalculatorImpl implements Calculator {
 		try {
 			loadFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw (null);// TODO
 		}
 	}
 
@@ -182,12 +181,15 @@ public class CalculatorImpl implements Calculator {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line = null;
 		formulas.clear();
+		System.out.println("******************************saved**************************");
 		while ((line = br.readLine()) != null) {
 			formulas.addLast(line); // the last operation is the last
-											// node
+									// node
+			System.out.println(line);
 		}
 		lengthOfTheformulasLinkedList = formulas.size();
-		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
+		currentElementInformulasLinkedList = Integer.parseInt(formulas.getLast());
+		formulas.removeLast();// remove current position
 		br.close();
 	}
 
