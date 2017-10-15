@@ -105,7 +105,12 @@ public class CalculatorImpl implements Calculator {
 
 	@Override
 	public String current() {
-		current = formulas.get(currentElementInformulasLinkedList);
+		try {
+			current = formulas.get(currentElementInformulasLinkedList);
+		} catch (Exception e) {
+			System.out.println("exception");
+			e.printStackTrace();// TODO
+		}
 		return current;
 	}
 
@@ -134,7 +139,8 @@ public class CalculatorImpl implements Calculator {
 		try {
 			savefile();
 		} catch (IOException e) {
-			throw (null);// TODO
+			System.out.println("exception");
+			e.printStackTrace();// TODO
 		}
 	}
 
@@ -163,7 +169,7 @@ public class CalculatorImpl implements Calculator {
 		try {
 			loadFile();
 		} catch (IOException e) {
-			throw (null);// TODO
+			e.printStackTrace();
 		}
 	}
 
