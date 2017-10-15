@@ -66,6 +66,7 @@ public class CalculatorImpl implements Calculator {
 		}
 		return found;
 	}
+
 	@Override
 	public String getResult() {
 		if (formula != null) {
@@ -150,15 +151,10 @@ public class CalculatorImpl implements Calculator {
 		} else {
 			i = 0;
 		}
-	//	System.out.println("******************************saved**************************");
 		for (int j = i; j < currentFormulas.size(); j++) {
 			bw.write(currentFormulas.get(j));
-		//	System.out.println(currentFormulas.get(j));
 			bw.newLine();
 		}
-		bw.write(String.valueOf(currentElementInformulasLinkedList));
-		//System.out.println(currentElementInformulasLinkedList);
-		bw.newLine();
 		bw.close();
 	}
 
@@ -180,15 +176,12 @@ public class CalculatorImpl implements Calculator {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line = null;
 		formulas.clear();
-	//	System.out.println("******************************saved**************************");
 		while ((line = br.readLine()) != null) {
 			formulas.addLast(line); // the last operation is the last
 									// node
-		//	System.out.println(line);
 		}
 		lengthOfTheformulasLinkedList = formulas.size();
-		currentElementInformulasLinkedList = Integer.parseInt(formulas.getLast());
-		formulas.removeLast();// remove current position
+		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
 		br.close();
 	}
 
