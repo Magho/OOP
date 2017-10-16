@@ -28,12 +28,12 @@ public class CalculatorImpl implements Calculator {
 			for (int i = 0; i < 4; i++) {
 				formulas.set(i, formulas.get(i + 1));
 			}
-			lengthOfTheformulasLinkedList--;
+			formulas.removeLast();
 		}
 
 		formulas.addLast(s);
-		lengthOfTheformulasLinkedList++;
-		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
+		lengthOfTheformulasLinkedList = formulas.size();
+		currentElementInformulasLinkedList = formulas.size() - 1;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class CalculatorImpl implements Calculator {
 	@Override
 	public String next() {
 		String formula = null;
-		if (currentElementInformulasLinkedList <= lengthOfTheformulasLinkedList - 2) {
+		if (currentElementInformulasLinkedList < lengthOfTheformulasLinkedList - 1) {
 			formula = formulas.get(currentElementInformulasLinkedList + 1);
 			currentElementInformulasLinkedList++;
 		}
@@ -140,7 +140,7 @@ public class CalculatorImpl implements Calculator {
 		File fout = new File("out.txt");
 		FileOutputStream out = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-		for (int j=0; j < formulas.size(); j++) {
+		for (int j = 0; j < formulas.size(); j++) {
 			bw.write(formulas.get(j));
 			bw.newLine();
 		}
@@ -171,9 +171,9 @@ public class CalculatorImpl implements Calculator {
 			formulas.addLast(line); // the last operation is the last
 									// node
 		}
-		lengthOfTheformulasLinkedList = formulas.size();
 		currentElementInformulasLinkedList = Integer.parseInt(formulas.getLast());
 		formulas.removeLast();// remove current position
+		lengthOfTheformulasLinkedList = formulas.size();
 		br.close();
 	}
 
