@@ -21,14 +21,19 @@ public class CalculatorImpl implements Calculator {
 	private LinkedList<String> formulas = new LinkedList<String>();
 	private int lengthOfTheformulasLinkedList = formulas.size();
 	private int currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
-	private LinkedList<String> currentFormulas = new LinkedList<String>();
 
 	@Override
 	public void input(String s) {
+		if (formulas.size() >= 5) {
+			for (int i = 0; i < 4; i++) {
+				formulas.set(i, formulas.get(i + 1));
+			}
+			lengthOfTheformulasLinkedList--;
+		}
+
 		formulas.addLast(s);
 		lengthOfTheformulasLinkedList++;
 		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
-		currentFormulas.addLast(s);
 	}
 
 	/**
@@ -50,7 +55,7 @@ public class CalculatorImpl implements Calculator {
 
 		boolean operatorfound = false;
 		boolean oneNumber = false;
-		String s = currentFormulas.get(currentElementInformulasLinkedList);
+		String s = formulas.get(currentElementInformulasLinkedList);
 		for (int i = 0; i < s.length(); i++) {
 			if (s.charAt(i) == '+' | s.charAt(i) == '-' | s.charAt(i) == '*' | s.charAt(i) == '/') {
 				// the string contain only one number
@@ -132,17 +137,11 @@ public class CalculatorImpl implements Calculator {
 	 * @throws IOException
 	 */
 	private void savefile() throws IOException {
-		int i;
 		File fout = new File("out.txt");
 		FileOutputStream out = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-		if (currentFormulas.size() >= 5) {
-			i = formulas.size() - 5;
-		} else {
-			i = 0;
-		}
-		for (int j = i; j < currentFormulas.size(); j++) {
-			bw.write(currentFormulas.get(j));
+		for (int j=0; j < formulas.size(); j++) {
+			bw.write(formulas.get(j));
 			bw.newLine();
 		}
 		bw.write(String.valueOf(currentElementInformulasLinkedList));
