@@ -116,7 +116,7 @@ public class CalculatorImpl implements Calculator {
 	@Override
 	public String next() {
 		String formula = null;
-		if (currentElementInformulasLinkedList < lengthOfTheformulasLinkedList - 2) {
+		if (currentElementInformulasLinkedList <= lengthOfTheformulasLinkedList - 2) {
 			formula = formulas.get(currentElementInformulasLinkedList + 1);
 			currentElementInformulasLinkedList++;
 		}
@@ -140,7 +140,7 @@ public class CalculatorImpl implements Calculator {
 		File fout = new File("out.txt");
 		FileOutputStream out = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-		for (int j = 0; j < formulas.size(); j++) {
+		for (int j=0; j < formulas.size(); j++) {
 			bw.write(formulas.get(j));
 			bw.newLine();
 		}
