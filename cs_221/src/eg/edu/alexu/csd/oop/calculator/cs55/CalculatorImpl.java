@@ -18,7 +18,6 @@ public class CalculatorImpl implements Calculator {
 	private char operator;
 	private String answer = null;
 	private String current = null;
-	private String formula = null;
 	private LinkedList<String> formulas = new LinkedList<String>();
 	private int lengthOfTheformulasLinkedList = formulas.size();
 	private int currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
@@ -26,31 +25,10 @@ public class CalculatorImpl implements Calculator {
 
 	@Override
 	public void input(String s) {
-		boolean operatorfound = false;
-		boolean oneNumber = false;
-		try {
-			for (int i = 0; i < s.length(); i++) {
-				if (s.charAt(i) == '+' | s.charAt(i) == '-' | s.charAt(i) == '*' | s.charAt(i) == '/') {
-					// the string contain only one number
-					if (i == 0 | i == s.length() - 1) {
-						oneNumber = true;
-					}
-					operatorfound = true;
-					firstNumber = Double.parseDouble(s.substring(0, i));
-					secondNumber = Double.parseDouble(s.substring(i + 1));
-					operator = s.charAt(i);
-				}
-			}
-			// length of the string is less than 3 meaning don't contain two
-			// numbers
-			if (s.trim().length() < 3 | checkIfContainSpace(s) | !operatorfound | oneNumber) {
-				throw (null);
-			}
-			formula = s;
-		} catch (Exception e) {
-			System.out.println("exception");
-			e.printStackTrace();// TODO
-		}
+		formulas.addLast(s);
+		lengthOfTheformulasLinkedList++;
+		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
+		currentFormulas.addLast(s);
 	}
 
 	/**
@@ -69,49 +47,55 @@ public class CalculatorImpl implements Calculator {
 
 	@Override
 	public String getResult() {
-		if (formula != null) {
-			try {
-				switch (operator) {
-				case '+':
-					answer = String.valueOf(sum(firstNumber, secondNumber));
-					break;
-				case '-':
-					answer = String.valueOf(substract(firstNumber, secondNumber));
-					break;
-				case '*':
-					answer = String.valueOf(multiply(firstNumber, secondNumber));
-					break;
-				case '/':
-					answer = String.valueOf(divide(firstNumber, secondNumber));
-					break;
-				default:
-					throw (null);// TODO
-				}
-				formulas.addLast(formula);
-				lengthOfTheformulasLinkedList++;
-				currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
-				currentFormulas.addLast(formula);
 
-				formula = null;
-			} catch (Exception e) {
-				System.out.println("exception");
-				e.printStackTrace();// TODO
+		boolean operatorfound = false;
+		boolean oneNumber = false;
+		String s = currentFormulas.get(currentElementInformulasLinkedList);
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == '+' | s.charAt(i) == '-' | s.charAt(i) == '*' | s.charAt(i) == '/') {
+				// the string contain only one number
+				if (i == 0 | i == s.length() - 1) {
+					oneNumber = true;
+				}
+				operatorfound = true;
+				firstNumber = Double.parseDouble(s.substring(0, i));
+				secondNumber = Double.parseDouble(s.substring(i + 1));
+				operator = s.charAt(i);
 			}
-			return answer;
-		} else {
-			throw (null);// TODO
 		}
+		// length of the string is less than 3 meaning don't contain two
+		// numbers
+		if (s.trim().length() < 3 | checkIfContainSpace(s) | !operatorfound | oneNumber) {
+			answer = null;
+		}
+
+		switch (operator) {
+		case '+':
+			answer = String.valueOf(sum(firstNumber, secondNumber));
+			break;
+		case '-':
+			answer = String.valueOf(substract(firstNumber, secondNumber));
+			break;
+		case '*':
+			answer = String.valueOf(multiply(firstNumber, secondNumber));
+			break;
+		case '/':
+			answer = String.valueOf(divide(firstNumber, secondNumber));
+			break;
+		default:
+			return null;
+		}
+		return answer;
 	}
 
 	@Override
 	public String current() {
 		try {
 			current = formulas.get(currentElementInformulasLinkedList);
+			return current;
 		} catch (Exception e) {
-			System.out.println("exception");
-			e.printStackTrace();// TODO
+			return null;
 		}
-		return current;
 	}
 
 	@Override
