@@ -145,6 +145,8 @@ public class CalculatorImpl implements Calculator {
 			bw.write(currentFormulas.get(j));
 			bw.newLine();
 		}
+		bw.write(String.valueOf(currentElementInformulasLinkedList));
+		bw.newLine();
 		bw.close();
 	}
 
@@ -171,7 +173,8 @@ public class CalculatorImpl implements Calculator {
 									// node
 		}
 		lengthOfTheformulasLinkedList = formulas.size();
-		currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
+		currentElementInformulasLinkedList = Integer.parseInt(formulas.getLast());
+		formulas.removeLast();// remove current position
 		br.close();
 	}
 

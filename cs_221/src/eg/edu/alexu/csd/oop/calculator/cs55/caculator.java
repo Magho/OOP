@@ -242,7 +242,6 @@ public class caculator {
 		JButton button_15 = new JButton("=");
 		button_15.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				calc.input(textField.getText());
 				textField.setText(calc.getResult());
 			}
 		});
