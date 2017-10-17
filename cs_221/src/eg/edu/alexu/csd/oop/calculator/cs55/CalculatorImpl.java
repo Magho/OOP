@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * @author Magho
  *
  */
-public class CalculatorImpl implements Calculator {
+public final class CalculatorImpl implements Calculator {
 
 	/**
 	 * .
@@ -87,8 +87,8 @@ public class CalculatorImpl implements Calculator {
 
 
 	/**
-	 * @param s
-	 * @return
+	 * @param s .
+	 * @return .
 	 */
 	private boolean checkIfContainSpace(final String s) {
 		boolean found = false;
@@ -198,7 +198,7 @@ public class CalculatorImpl implements Calculator {
 	}
 
 	/**
-	 * @throws IOException
+	 * @throws IOException .
 	 */
 	private void savefile() throws IOException {
 		File fout = new File("out.txt");
@@ -224,7 +224,7 @@ public class CalculatorImpl implements Calculator {
 	}
 
 	/**
-	 * @throws IOException
+	 * @throws IOException .
 	 */
 	private void loadFile() throws IOException {
 		File fout = new File("out.txt");
@@ -246,36 +246,28 @@ public class CalculatorImpl implements Calculator {
 	}
 
 	/**
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
+	 * @return .
 	 */
 	private double sum() {
 		return this.firstNumber + this.secondNumber;
 	}
 
 	/**
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
+	 * @return .
 	 */
 	private double substract() {
 		return this.firstNumber - this.secondNumber;
 	}
 
 	/**
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
+	 * @return .
 	 */
 	private double multiply() {
 		return this.firstNumber * this.secondNumber;
 	}
 
 	/**
-	 * @param firstNumber
-	 * @param secondNumber
-	 * @return
+	 * @return .
 	 */
 	private double divide() {
 		if (secondNumber == zero) {
