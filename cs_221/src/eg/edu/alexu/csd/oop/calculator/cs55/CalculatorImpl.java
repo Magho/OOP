@@ -16,7 +16,6 @@ import java.util.LinkedList;
  *
  */
 public final class CalculatorImpl implements Calculator {
-
 	/**
 	 * .
 	 */
