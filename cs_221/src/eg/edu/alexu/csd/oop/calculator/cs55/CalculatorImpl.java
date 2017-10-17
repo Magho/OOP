@@ -85,6 +85,7 @@ public class CalculatorImpl implements Calculator {
 		currentElementInformulasLinkedList = formulas.size() - one;
 	}
 
+
 	/**
 	 * @param s
 	 * @return
@@ -131,19 +132,19 @@ public class CalculatorImpl implements Calculator {
 
 		switch (operator) {
 		case '+':
-			answer = String.valueOf(sum(firstNumber, secondNumber));
+			answer = String.valueOf(sum());
 			break;
 		case '-':
 			answer =
-			String.valueOf(substract(firstNumber, secondNumber));
+			String.valueOf(substract());
 			break;
 		case '*':
 			answer =
-			String.valueOf(multiply(firstNumber, secondNumber));
+			String.valueOf(multiply());
 			break;
 		case '/':
 			answer =
-			String.valueOf(divide(firstNumber, secondNumber));
+			String.valueOf(divide());
 			break;
 		default:
 			return null;
@@ -249,9 +250,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double sum(final double firstNumber,
-			final double secondNumber) {
-		return firstNumber + secondNumber;
+	private double sum() {
+		return this.firstNumber + this.secondNumber;
 	}
 
 	/**
@@ -259,9 +259,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double substract(final double firstNumber,
-			final double secondNumber) {
-		return firstNumber - secondNumber;
+	private double substract() {
+		return this.firstNumber - this.secondNumber;
 	}
 
 	/**
@@ -269,9 +268,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double multiply(final double firstNumber,
-			final double secondNumber) {
-		return firstNumber * secondNumber;
+	private double multiply() {
+		return this.firstNumber * this.secondNumber;
 	}
 
 	/**
@@ -279,11 +277,10 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double divide(final double firstNumber,
-			final double secondNumber) {
+	private double divide() {
 		if (secondNumber == zero) {
 			return 00;
 		}
-		return firstNumber / secondNumber;
+		return this.firstNumber / this.secondNumber;
 	}
 }
