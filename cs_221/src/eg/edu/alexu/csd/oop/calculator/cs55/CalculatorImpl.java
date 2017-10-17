@@ -11,38 +11,87 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
+/**
+ * @author Magho
+ *
+ */
 public class CalculatorImpl implements Calculator {
 
+	/**
+	 * .
+	 */
+	private int zero = 0;
+	/**
+	 * .
+	 */
+	private int one = 1;
+	/**
+	 * .
+	 */
+	private final int three = 3;
+	/**
+	 * .
+	 */
+	private final int four = 4;
+	/**
+	 * .
+	 */
+	private final int five = 5;
+	/**
+	 * .
+	 */
 	private double firstNumber;
+	/**
+	 * .
+	 */
 	private double secondNumber;
+	/**
+	 * .
+	 */
 	private char operator;
+	/**
+	 * .
+	 */
 	private String answer = null;
+	/**
+	 * .
+	 */
 	private String current = null;
+	/**
+	 * .
+	 */
 	private LinkedList<String> formulas = new LinkedList<String>();
+	/**
+	 * @lengthOfTheformulasLinkedList
+	 */
 	private int lengthOfTheformulasLinkedList = formulas.size();
-	private int currentElementInformulasLinkedList = lengthOfTheformulasLinkedList - 1;
+	/**
+	 * @currentElementInformulasLinkedList.
+	 */
+	private int currentElementInformulasLinkedList
+	= lengthOfTheformulasLinkedList - one;
 
 	@Override
-	public void input(String s) {
-		if (formulas.size() >= 5) {
-			for (int i = 0; i < 4; i++) {
-				formulas.set(i, formulas.get(i + 1));
+	public void input(final String s) {
+		if (formulas.size() >= five) {
+			for (int i = zero; i < four; i++) {
+				formulas.set(i, formulas.get(i + one));
 			}
 			formulas.removeLast();
 		}
 
 		formulas.addLast(s);
 		lengthOfTheformulasLinkedList = formulas.size();
-		currentElementInformulasLinkedList = formulas.size() - 1;
+		currentElementInformulasLinkedList = formulas.size() - one;
 	}
 
 	/**
 	 * @param s
 	 * @return
 	 */
-	private boolean checkIfContainSpace(String s) {
+	private boolean checkIfContainSpace(final String s) {
 		boolean found = false;
-		for (int i = 0; i < s.length(); i++) {
+		for (int i = zero; i < s.length(); i++) {
 			if (s.charAt(i) == ' ') {
 				found = true;
 			}
@@ -56,21 +105,27 @@ public class CalculatorImpl implements Calculator {
 		boolean operatorfound = false;
 		boolean oneNumber = false;
 		String s = formulas.get(currentElementInformulasLinkedList);
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) == '+' | s.charAt(i) == '-' | s.charAt(i) == '*' | s.charAt(i) == '/') {
+		for (int i = zero; i < s.length(); i++) {
+			if (s.charAt(i) == '+' | s.charAt(i) == '-'
+					| s.charAt(i) == '*'
+					| s.charAt(i) == '/') {
 				// the string contain only one number
-				if (i == 0 | i == s.length() - 1) {
+				if (i == zero | i == s.length() - one) {
 					oneNumber = true;
 				}
 				operatorfound = true;
-				firstNumber = Double.parseDouble(s.substring(0, i));
-				secondNumber = Double.parseDouble(s.substring(i + 1));
+				firstNumber =
+				Double.parseDouble(s.substring(zero, i));
+				secondNumber =
+				Double.parseDouble(s.substring(i + one));
 				operator = s.charAt(i);
 			}
 		}
 		// length of the string is less than 3 meaning don't contain two
 		// numbers
-		if (s.trim().length() < 3 | checkIfContainSpace(s) | !operatorfound | oneNumber) {
+		if (s.trim().length() < three
+				| checkIfContainSpace(s)
+				| !operatorfound | oneNumber) {
 			answer = null;
 		}
 
@@ -79,13 +134,16 @@ public class CalculatorImpl implements Calculator {
 			answer = String.valueOf(sum(firstNumber, secondNumber));
 			break;
 		case '-':
-			answer = String.valueOf(substract(firstNumber, secondNumber));
+			answer =
+			String.valueOf(substract(firstNumber, secondNumber));
 			break;
 		case '*':
-			answer = String.valueOf(multiply(firstNumber, secondNumber));
+			answer =
+			String.valueOf(multiply(firstNumber, secondNumber));
 			break;
 		case '/':
-			answer = String.valueOf(divide(firstNumber, secondNumber));
+			answer =
+			String.valueOf(divide(firstNumber, secondNumber));
 			break;
 		default:
 			return null;
@@ -96,7 +154,8 @@ public class CalculatorImpl implements Calculator {
 	@Override
 	public String current() {
 		try {
-			current = formulas.get(currentElementInformulasLinkedList);
+			current = formulas.get(
+					currentElementInformulasLinkedList);
 			return current;
 		} catch (Exception e) {
 			return null;
@@ -106,8 +165,10 @@ public class CalculatorImpl implements Calculator {
 	@Override
 	public String prev() {
 		String formula = null;
-		if (currentElementInformulasLinkedList > 0) {
-			formula = formulas.get(currentElementInformulasLinkedList - 1);
+		if (currentElementInformulasLinkedList > zero) {
+			formula = formulas.get(
+					currentElementInformulasLinkedList
+							- one);
 			currentElementInformulasLinkedList--;
 		}
 		return formula;
@@ -116,8 +177,10 @@ public class CalculatorImpl implements Calculator {
 	@Override
 	public String next() {
 		String formula = null;
-		if (currentElementInformulasLinkedList < lengthOfTheformulasLinkedList - 1) {
-			formula = formulas.get(currentElementInformulasLinkedList + 1);
+		if (currentElementInformulasLinkedList
+				< lengthOfTheformulasLinkedList - one) {
+			formula =
+			formulas.get(currentElementInformulasLinkedList + one);
 			currentElementInformulasLinkedList++;
 		}
 		return formula;
@@ -129,7 +192,7 @@ public class CalculatorImpl implements Calculator {
 			savefile();
 		} catch (IOException e) {
 			System.out.println("exception");
-			e.printStackTrace();// TODO
+			e.printStackTrace();
 		}
 	}
 
@@ -139,8 +202,9 @@ public class CalculatorImpl implements Calculator {
 	private void savefile() throws IOException {
 		File fout = new File("out.txt");
 		FileOutputStream out = new FileOutputStream(fout);
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-		for (int j = 0; j < formulas.size(); j++) {
+		BufferedWriter bw =
+				new BufferedWriter(new OutputStreamWriter(out));
+		for (int j = zero; j < formulas.size(); j++) {
 			bw.write(formulas.get(j));
 			bw.newLine();
 		}
@@ -164,15 +228,18 @@ public class CalculatorImpl implements Calculator {
 	private void loadFile() throws IOException {
 		File fout = new File("out.txt");
 		FileInputStream in = new FileInputStream(fout);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		BufferedReader br =
+				new BufferedReader(new InputStreamReader(in));
 		String line = null;
 		formulas.clear();
 		while ((line = br.readLine()) != null) {
-			formulas.addLast(line); // the last operation is the last
-									// node
+			formulas.addLast(line);
+			// the last operation is the last
+			// node
 		}
-		currentElementInformulasLinkedList = Integer.parseInt(formulas.getLast());
-		formulas.removeLast();// remove current position
+		currentElementInformulasLinkedList =
+				Integer.parseInt(formulas.getLast());
+		formulas.removeLast();
 		lengthOfTheformulasLinkedList = formulas.size();
 		br.close();
 	}
@@ -182,7 +249,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double sum(double firstNumber, double secondNumber) {
+	private double sum(final double firstNumber,
+			final double secondNumber) {
 		return firstNumber + secondNumber;
 	}
 
@@ -191,7 +259,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double substract(double firstNumber, double secondNumber) {
+	private double substract(final double firstNumber,
+			final double secondNumber) {
 		return firstNumber - secondNumber;
 	}
 
@@ -200,7 +269,8 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double multiply(double firstNumber, double secondNumber) {
+	private double multiply(final double firstNumber,
+			final double secondNumber) {
 		return firstNumber * secondNumber;
 	}
 
@@ -209,12 +279,11 @@ public class CalculatorImpl implements Calculator {
 	 * @param secondNumber
 	 * @return
 	 */
-	private double divide(double firstNumber, double secondNumber) {
-		// float TODO
-		if (secondNumber == 0) {
-			return 00;// TODO
+	private double divide(final double firstNumber,
+			final double secondNumber) {
+		if (secondNumber == zero) {
+			return 00;
 		}
 		return firstNumber / secondNumber;
 	}
-
 }
