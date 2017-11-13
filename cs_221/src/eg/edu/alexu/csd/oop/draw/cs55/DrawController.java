@@ -181,7 +181,7 @@ public class DrawController implements DrawingEngine {
 				shape[i] = new Square();
 			}
 
-			myJson += "\"Shape " + ((Square) shape[i]).getShapeName() + " \": { \"Color\" : \""
+			myJson += "\"Shape " + "Square" + " \": { \"Color\" : \""
 					+ Integer.toString(shape[i].getColor().getRGB()) + "\" , ";
 			String MapJSONSting = MapJSON(shape[i].getProperties().toString());
 
