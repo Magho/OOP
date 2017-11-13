@@ -156,6 +156,8 @@ public class DrawController implements DrawingEngine {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		undo.clear();
+		redo.clear();
 	}
 
 	/** JSON or XML to java and vice versa **/
