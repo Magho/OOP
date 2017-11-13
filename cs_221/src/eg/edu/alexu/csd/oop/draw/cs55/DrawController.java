@@ -180,7 +180,7 @@ public class DrawController implements DrawingEngine {
 			if (shape[i] == null) {
 				shape[i] = new Square();
 			}
-
+			shape[i] = new Square();
 			myJson += "\"Shape " + "Square" + " \": { \"Color\" : \""
 					+ Integer.toString(shape[i].getColor().getRGB()) + "\" , ";
 			String MapJSONSting = MapJSON(shape[i].getProperties().toString());
