@@ -21,6 +21,7 @@ public class Square implements Shape {
 	public Square() {
 		properities = new HashMap<String,Double>();
 		properities.put("length",1.0);
+		base_Point = new Point (2,2);
 	}
 	
 	public Square(Square cloned_shape) {
