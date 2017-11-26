@@ -15,14 +15,14 @@ public class HandelParsing {
 	private String SQLCommand = "";
 	private String currentDatabase = null;
 
-	private Pattern create_database = Pattern.compile("\\bcreate database\\b");
-	private Pattern create_table = Pattern.compile("\\bcreate table\\b");
-	private Pattern drop_database = Pattern.compile("\\bdrop database\\b");
-	private Pattern drop_table = Pattern.compile("\\bcreate database\\b");
-	private Pattern insert = Pattern.compile("\\binsert\\b");
-	private Pattern update = Pattern.compile("\\bupdate\\b");
-	private Pattern delete = Pattern.compile("\\bdelete\\b");
-	private Pattern select = Pattern.compile("\\bselect\\b");
+	private Pattern create_database = Pattern.compile("create database");
+	private Pattern create_table = Pattern.compile("create table");
+	private Pattern drop_database = Pattern.compile("drop database");
+	private Pattern drop_table = Pattern.compile("create database");
+	private Pattern insert = Pattern.compile("insert");
+	private Pattern update = Pattern.compile("update");
+	private Pattern delete = Pattern.compile("delete");
+	private Pattern select = Pattern.compile("select");
 
 	private Matcher create_database_Matcher;
 	private Matcher create_table_Matcher;
@@ -76,8 +76,8 @@ public class HandelParsing {
 			} else {
 				this.currentDatabase = dataBaseName;
 			}
-
 		} else {
+			System.out.println("set data");
 			sqlOperations.create_database(dataBaseName);
 			this.currentDatabase = dataBaseName;
 		}
@@ -88,10 +88,10 @@ public class HandelParsing {
 	private void getSQlCommand() {
 		IValidator validator = ValidationFactory.getValidator(SQLCommand);
 		if (validator.IsValid(SQLCommand)) {
-			SQLCommand = validator.getSQL();
 		} else {
 			throw new RuntimeException("unValid Query");
 		}
+		SQLCommand = validator.getSQL();
 	}
 
 	public String getCurrentDatabaseName() {
@@ -135,8 +135,8 @@ public class HandelParsing {
 		create_database_Matcher.reset(SQLCommand);
 		create_database_Matcher.find();
 		// +2 for escaping space and set index to the first element of the name
-		int indexOfDataBaseName = create_database_Matcher.end() + 2;
-		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
+		int indexOfDataBaseName = create_database_Matcher.end() + 1;
+		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()-1).trim();
 		sqlOperations.create_database(DataBaseName);
 	}
 

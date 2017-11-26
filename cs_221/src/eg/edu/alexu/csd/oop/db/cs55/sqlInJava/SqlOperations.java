@@ -23,6 +23,7 @@ public class SqlOperations {
 			Handel_Create_Database_If_Not_Exists_Before(database, DataBaseName);
 		} else {
 			Handel_Create_Database_If_Exists_Before();
+			currentDatabase = DataBaseName;
 		}
 	}
 
@@ -45,7 +46,7 @@ public class SqlOperations {
 	}
 
 	private void Handel_Create_Database_If_Exists_Before() throws SQLException {
-		throw new SQLException();
+		//throw new SQLException();
 	}
 
 	public void create_table(String TableName, Map<String, String> coloumn) throws SQLException {

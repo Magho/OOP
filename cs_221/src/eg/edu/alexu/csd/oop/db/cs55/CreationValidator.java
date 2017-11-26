@@ -21,7 +21,6 @@ public class CreationValidator extends Validation {
 		}
 		String regexTable = "create\\stable\\s[a-z][a-z0-9]*.+;";
 		if(sql.matches(regexTable)){
-			
 			sql = sql.replaceAll("create\\stable\\s[a-z][a-z0-9]*\\s[(]", "");
 			sql = sql.replaceAll("[)];", "");
 			String[] elements = sql.split(",");
@@ -31,7 +30,7 @@ public class CreationValidator extends Validation {
 			}
 		}
 		if(valid){
-			setSql(removeUnusedSpaces(sqlLine));
+			setSql(removeUnusedSpaces(sqlLine).toLowerCase());
 		}else{
 			setSql(null);
 		}

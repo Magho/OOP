@@ -118,7 +118,7 @@ public class HandelXml {
 	}
 
 	public void create_database_toXML(String databaseName) {
-		File dir = new File(databaseName);
+		File dir = new File("databases/"+databaseName);
 		dir.mkdir();
 	}
 
@@ -371,7 +371,7 @@ public class HandelXml {
 		}
 	}
 
-	static void readAllDatabasesBasicInfos(SQL sql) {
+	public static void readAllDatabasesBasicInfos(SQL sql) {
 		File databases = new File("databases");
 		FileFilter directoryFileFilter = new FileFilter() {
 			@Override
@@ -379,6 +379,22 @@ public class HandelXml {
 				return file.isDirectory();
 			}
 		};
+		// if the directory does not exist, create it
+		if (!databases.exists()) {
+		    System.out.println("creating directory: " + databases.getName());
+		    boolean result = false;
+
+		    try{
+		        databases.mkdir();
+		        result = true;
+		    } 
+		    catch(SecurityException se){
+		        //handle it
+		    }        
+		    if(result) {    
+		        System.out.println("DIR created");  
+		    }
+		}
 
 		File[] directoryListAsFiles = databases.listFiles(directoryFileFilter);
 		List<String> databasesNames = new ArrayList<String>(directoryListAsFiles.length);
@@ -388,6 +404,7 @@ public class HandelXml {
 			compositeDatabase.setName(database.getName());
 			sql.create(compositeDatabase);
 		}
+		System.out.println(databasesNames);
 		for (int i = 0; i < databasesNames.size(); i++) {
 			File database = new File("databases/" + databasesNames.get(i));
 

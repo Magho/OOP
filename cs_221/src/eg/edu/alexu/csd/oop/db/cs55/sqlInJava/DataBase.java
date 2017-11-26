@@ -14,7 +14,6 @@ public class DataBase implements IComponent {
 
 	public void Drop(Table component) {
 		tables.remove(component);
-
 	}
 
 	@Override
