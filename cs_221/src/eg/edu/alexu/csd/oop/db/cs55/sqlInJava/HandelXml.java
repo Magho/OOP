@@ -435,8 +435,8 @@ public class HandelXml {
 
 	static Map<String, String> getColumnsInfo(List<String> fileContent) {
 		fileContent.remove(0);
-		fileContent.remove(1);
-		fileContent.remove(2);
+		fileContent.remove(0);
+		fileContent.remove(0);
 		fileContent.remove(fileContent.size() - 1);
 		Map<String, String> columnsInfo = new HashMap<String, String>();
 		for (int i = 0; i < fileContent.size(); i++) {
