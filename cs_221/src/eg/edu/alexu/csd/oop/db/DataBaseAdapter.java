@@ -31,9 +31,7 @@ public class DataBaseAdapter implements Database {
 	public Object[][] executeQuery(String query) throws SQLException {
 		handelparsing.setSQLCommand(query);
 		Table table = handelparsing.returnSelectedTable();
-		Row [][] selectedrows = new Row[table.coloumn.size()][table.rows.size()];
-		//TODO set elements from selectedrows to array of objects
-		return selectedrows;
+		return table.convertTableTo2Darray();
 	}
 
 	@Override

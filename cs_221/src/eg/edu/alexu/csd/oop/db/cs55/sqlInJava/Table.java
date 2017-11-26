@@ -7,14 +7,15 @@ import java.util.Map;
 public class Table implements IComponent {
 
 	String TableName;
-	public Map<String, String> coloumn  = new HashMap<String, String>();
+	public Map<String, String> coloumn = new HashMap<String, String>();
 	public ArrayList<Row> rows = new ArrayList<Row>();
 
-	public void addColoumns (Map<String, String> coloumn){
+	public void addColoumns(Map<String, String> coloumn) {
 		this.coloumn = coloumn;
 	}
+
 	public void create(Row component) {
-	
+
 		rows.add(component);
 	}
 
@@ -22,11 +23,12 @@ public class Table implements IComponent {
 
 		rows.remove(component);
 	}
-	
-	public Table Select (){
+
+	public Table Select() {
 		return null;
 	}
-	public void addTable(Table table){
+
+	public void addTable(Table table) {
 		for (int i = 0; i < table.getSize(); i++) {
 			this.rows.add(table.rows.get(i));
 		}
@@ -36,15 +38,32 @@ public class Table implements IComponent {
 	public String getName() {
 		return TableName;
 	}
-	
+
 	@Override
 	public void setName(String name) {
 		TableName = name;
-	}	
-	
+	}
+
 	@Override
-	public long getSize(){
+	public long getSize() {
 		return rows.size();
+	}
+
+	public Object[][] convertTableTo2Darray() {
+		Object[][] object = new Object[this.rows.size()][this.coloumn.size()];
+		for (int i = 0; i < this.rows.size(); i++) {
+			int j =0;
+			for (String value : this.coloumn.keySet()) {
+				String str = this.coloumn.get(value);
+				if (str.compareToIgnoreCase("varchar") == 0){
+					object[i][j] = this.rows.get(j).coloumn.get(value);
+				} else {
+					object[i][j] = Integer.parseInt(this.rows.get(j).coloumn.get(value));
+				}
+				j++;
+			}
+		}
+		return object;
 	}
 
 }
