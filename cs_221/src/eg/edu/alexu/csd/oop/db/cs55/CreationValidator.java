@@ -15,22 +15,30 @@ public class CreationValidator extends Validation {
 		String sql = removeUnusedSpaces(sqlLine);
 		boolean valid = false;
 		sql = sql.toLowerCase();
-		String regexDataBase = "create\\sdatabase\\s[a-z][a-z0-9]*;";
+		String regexDataBase = "create\\sdatabase\\s[a-z][a-z0-9]*.*";
 		if(sql.matches(regexDataBase)){
 			valid = true;
 		}
-		String regexTable = "create\\stable\\s[a-z][a-z0-9]*.+;";
+		String regexTable = "create\\stable\\s[a-z][a-z0-9]*.*";
 		if(sql.matches(regexTable)){
 			sql = sql.replaceAll("create\\stable\\s[a-z][a-z0-9]*\\s[(]", "");
-			sql = sql.replaceAll("[)];", "");
+			sql = sql.replaceAll("[)];?", "");
 			String[] elements = sql.split(",");
 			valid = true;
 			for(String str : elements){
 				valid = valid && str.matches("[a-z][a-z0-9]*\\s[a-z]{3,7}");
 			}
 		}
+		String ret = removeUnusedSpaces(sqlLine);
+		if(sqlLine.contains(";")){
+			ret = ret.substring(0,
+					ret.length()-1);
+		}
+		
+		System.out.println(valid);
+		System.out.println(sql);
 		if(valid){
-			setSql(removeUnusedSpaces(sqlLine).toLowerCase());
+			setSql(ret);
 		}else{
 			setSql(null);
 		}

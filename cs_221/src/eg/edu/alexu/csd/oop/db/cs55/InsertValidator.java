@@ -7,7 +7,8 @@ public class InsertValidator extends Validation{
 	public InsertValidator(){
 		super();
 	}
-	public boolean isValid(String sqlLine){
+	@Override
+	public boolean IsValid(String sqlLine){
 	
 		if(sqlLine.charAt(sqlLine.length()-1)==';')
 			sqlLine = sqlLine.substring(0, sqlLine.length()-1);
@@ -26,9 +27,7 @@ public class InsertValidator extends Validation{
 		}
 		valid = valid && checkVariable(variable);
 		String reg = ".+([(]([\"\']?[a-z0-9]+[\"\']?,?)*[)]).*";
-		System.out.println(processedSqlCommand);
 		String val = processedSqlCommand.replaceAll(reg, "$1");
-		System.out.println(val);
 		val = val.substring(1,val.length()-1);
 		for(String str : val.split(",")) {
 			if((str.contains("\"")||str.contains("\'"))){
@@ -36,6 +35,12 @@ public class InsertValidator extends Validation{
 			} else {
 				valid = valid && !val.matches("[a-z]+");
 			}
+		}
+		System.out.println(valid);
+		if(valid){
+			setSql(processedSqlCommand.toLowerCase());
+		}else{
+			setSql(null);
 		}
 		return valid;
 	}

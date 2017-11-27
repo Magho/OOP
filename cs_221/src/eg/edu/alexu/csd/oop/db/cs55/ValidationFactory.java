@@ -20,6 +20,9 @@ public class ValidationFactory {
 		if(command.equalsIgnoreCase("create")){
 			return new CreationValidator();
 		}
+		if(command.equalsIgnoreCase("update")){
+			return new UpdateValidation();
+		}
 		return null;
 	}
 }

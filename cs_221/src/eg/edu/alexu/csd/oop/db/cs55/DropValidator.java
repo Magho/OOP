@@ -9,10 +9,14 @@ public class DropValidator extends Validation {
 		boolean valid = false;
 		String sql = removeUnusedSpaces(sqlLine);
 		sql = sql.toLowerCase();
-		String regex = "(drop\\stable\\s|drop\\sdatabase\\s){1}[a-z][a-z0-9]+;";
+		String regex = "(drop\\stable\\s|drop\\sdatabase\\s){1}[a-z][a-z0-9]+.*";
 		valid = sql.matches(regex);
+		System.out.println(sql);
+		if(sql.contains(";")){
+			sql = sql.substring(0,sql.length()-1);
+		}
 		if(valid){
-			setSql(removeUnusedSpaces(sqlLine));
+			setSql(sql);
 		}else{
 			setSql(null);
 		}

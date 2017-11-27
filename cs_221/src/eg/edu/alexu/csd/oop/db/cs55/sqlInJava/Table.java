@@ -47,20 +47,34 @@ public class Table implements IComponent {
 	public long getSize(){
 		return rows.size();
 	}
+	
+	public Map<String, String> returnSelectedColoumns (ArrayList <String> selectedColoumnsNames){
+		Map <String, String> map = new HashMap <>();
+		for (int i = 0 ; i < selectedColoumnsNames.size() ; i++ ){
+			map.put(selectedColoumnsNames.get(i),coloumn.get(selectedColoumnsNames.get(i)) );
+		}
+		return map;
+	}
+	
 	public Object[][] convertTableTo2Darray() {
+
 		Object[][] object = new Object[this.rows.size()][this.coloumn.size()];
 		for (int i = 0; i < this.rows.size(); i++) {
 			int j =0;
 			for (String value : this.coloumn.keySet()) {
+				System.out.println(value + " returned size");
 				String str = this.coloumn.get(value);
 				if (str.compareToIgnoreCase("varchar") == 0){
-					object[i][j] = this.rows.get(j).coloumn.get(value);
+					System.out.println(this.rows.get(i).coloumn.get(value) + " returned size");
+					object[i][j] = this.rows.get(i).coloumn.get(value);
 				} else {
-					object[i][j] = Integer.parseInt(this.rows.get(j).coloumn.get(value));
+					System.out.println(this.rows.get(i).coloumn.get(value) + " returned size");
+					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(value));
 				}
 				j++;
 			}
 		}
 		return object;
 	}
+
 }

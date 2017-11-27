@@ -18,7 +18,7 @@ public class SelectionValidator  extends Validation {
 		String work = removeUnusedSpaces(sqlLine);
 		work = work.toLowerCase();
 		String selectionRegex = "select\\s([a-z\\*][a-z0-9]*(,)?)*\\sfrom\\s[a-z][a-z0-9]*";
-		selectionRegex +="(\\swhere\\s[a-z][a-z0-9]*\\s?[<>=]=?\\s?[\"]?([a-z0-9]+)[\"]?)?;";
+		selectionRegex +="(\\swhere\\s[a-z][a-z0-9]*\\s?[<>=]=?\\s?[\"]?([a-z0-9]+)[\"]?)?.*";
 		valid = work.matches(selectionRegex);
 		String regex = ".+[=<>][=]?([\"]?([a-z0-9]+)[\"]?).+";
 		String val = work.replaceAll(regex, "$1");
@@ -28,8 +28,12 @@ public class SelectionValidator  extends Validation {
 			valid = valid && !val.matches("[a-z]+");
 		}
 		//System.out.println(work);
+		work = removeUnusedSpaces(sqlLine);
+		if(work.contains(";")){
+			work = work.substring(0, work.length()-1);
+		}
 		if(valid){
-			setSql(removeUnusedSpaces(sqlLine));
+			setSql(work);
 		}
 		return valid;
 	}

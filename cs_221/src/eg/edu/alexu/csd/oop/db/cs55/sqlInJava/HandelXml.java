@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -26,6 +27,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -46,7 +48,7 @@ public class HandelXml {
 	SqlOperations sqlOperations;
 
 	public HandelXml(SQL sql, String currentDatabase, SqlOperations sqlOperations) {
-		sql = SQL.CreateSQL();
+		this.sql = SQL.CreateSQL();
 		this.currentDatabase = currentDatabase;
 		this.sqlOperations = sqlOperations;
 	}
@@ -57,6 +59,7 @@ public class HandelXml {
 		Table selectedTable = new Table();
 		Table tableRed = new Table();
 		tableRed.setName(TableName + "Temp");
+		Table dummytable;
 		tableRed.addColoumns(sqlOperations.get_Current_Table(TableName, database).coloumn);
 		ArrayList<String> coloumns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
@@ -64,11 +67,12 @@ public class HandelXml {
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = factory
-					.createXMLEventReader(new FileReader(database.getName() + "/" + TableName + ".XmL"));
+					.createXMLEventReader(new FileReader(System.getProperty("user.dir") + System.getProperty("file.separator") + "databases"+ System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator") +TableName + ".XmL"));
 
 			int counter = 0;
 			while (eventReader.hasNext()) {
 
+				
 				XMLEvent event = eventReader.nextEvent();
 				switch (event.getEventType()) {
 
@@ -81,23 +85,30 @@ public class HandelXml {
 					EndElement endElement = event.asEndElement();
 
 					if (endElement.getName().getLocalPart().equals("table")) {
-						selectedTable.addTable(
-								sqlOperations.Handel_Select_Table_If_Exists(tableRed, database, coloumnInCondition,
-										operator, valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist));
+
+						System.out.println("innnnnnnnnnnnnnnnn");
+						dummytable = sqlOperations.Handel_Select_Table_If_Exists(tableRed, database, coloumnInCondition,
+								operator, valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist);
+						selectedTable.addColoumns(dummytable.coloumn);
+						selectedTable.addTable(dummytable);
 						tableRed.rows.clear();
 						break;
 					} else if (endElement.getName().getLocalPart().equalsIgnoreCase("row")) {
-						if (counter % 20 == 0) {
-							selectedTable.addTable(
-									sqlOperations.Handel_Select_Table_If_Exists(tableRed, database, coloumnInCondition,
-											operator, valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist));
+						if (counter % 15000 == 0) {
+
+							dummytable = sqlOperations.Handel_Select_Table_If_Exists(tableRed, database, coloumnInCondition,
+									operator, valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist);
+							selectedTable.addColoumns(dummytable.coloumn);
+							selectedTable.addTable(dummytable);
 							tableRed.rows.clear();
 						}
 						counter++;
 						Row row = new Row(coloumns, values);
+
 						tableRed.create(row);
-						coloumns.clear();
-						values.clear();
+
+						coloumns = new ArrayList<String>();
+						values = new ArrayList<String>();
 					} else {
 						coloumns.add(endElement.getName().getLocalPart());
 						if (coloumns.size() > values.size()) {
@@ -113,17 +124,21 @@ public class HandelXml {
 			e.printStackTrace();
 		}
 
+
 		return selectedTable;
 
 	}
 
 	public void create_database_toXML(String databaseName) {
-		File dir = new File("databases/"+databaseName);
+		File dir = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "databases" + System.getProperty("file.separator") + databaseName);
 		dir.mkdir();
+		System.out.println(dir.isDirectory());
 	}
 
 	public void create_table_toXML(String databaseName, String tableName) {
-		File tableFile = new File(databaseName + "/" + tableName + ".XmL");
+		File tableFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + tableName + ".XmL");
+		System.out.println(tableFile.getAbsolutePath());
+
 		try {
 			tableFile.createNewFile();
 			StringWriter stringWriter = new StringWriter();
@@ -144,7 +159,7 @@ public class HandelXml {
 
 			stringWriter.close();
 
-			PrintWriter writer = new PrintWriter(databaseName + "/" + tableName + ".XmL", "UTF-8");
+			PrintWriter writer = new PrintWriter(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + tableName + ".XmL", "UTF-8");
 			writer.println(xmlString);
 			writer.close();
 
@@ -154,18 +169,27 @@ public class HandelXml {
 	}
 
 	public void drop_database_toXML(String databaseName) {
-		File db = new File(databaseName);
+		File db = new File("databases"+ System.getProperty("file.separator")  + databaseName);
 		String[] entries = db.list();
-		for (String s : entries) {
-			File currentFile = new File(db.getPath(), s);
-			currentFile.delete();
+		// System.out.println(databaseName);
+		if (entries != null) {
+			for (String s : entries) {
+				System.out.println("a " + db.getPath());
+				File currentFile = new File(db.getPath(), s);
+				currentFile.delete();
+			}
 		}
 		db.delete();
 	}
 
 	public void drop_table_toXML(String databaseName, String tableName) {
-		File tableFile = new File(databaseName + "/" + tableName + ".XmL");
-		tableFile.delete();
+		File tableFileXmL = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + tableName + ".XmL");
+		tableFileXmL.delete();
+	}
+	
+	public void drop_table_toDTD(String databaseName, String tableName) {
+		File tableFileDtd = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + tableName + ".dtd");
+		tableFileDtd.delete();
 	}
 
 	public void insert_toXML(String databaseName, Table newInsertedRaws) {
@@ -179,7 +203,7 @@ public class HandelXml {
 		}
 		Document document = null;
 		try {
-			document = documentBuilder.parse(databaseName + "/" + newInsertedRaws.getName() + ".XmL");
+			document = documentBuilder.parse(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + newInsertedRaws.getName() + ".XmL");
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -205,10 +229,14 @@ public class HandelXml {
 		Transformer transformer = null;
 		try {
 			transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
 		} catch (TransformerConfigurationException e) {
 			e.printStackTrace();
 		}
-		StreamResult result = new StreamResult(databaseName + "/" + newInsertedRaws.getName() + ".XmL");
+		StreamResult result = new StreamResult("databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + newInsertedRaws.getName() + ".XmL");
 		try {
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
@@ -228,7 +256,7 @@ public class HandelXml {
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = factory
-					.createXMLEventReader(new FileReader(database.getName() + "/" + TableName + ".XmL"));
+					.createXMLEventReader(new FileReader(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
 			int counter = 0;
 			while (eventReader.hasNext()) {
 
@@ -250,7 +278,7 @@ public class HandelXml {
 						tableRed.rows.clear();
 						break;
 					} else if (endElement.getName().getLocalPart().equalsIgnoreCase("row")) {
-						if (counter % 20 == 0) {
+						if (counter % 15000 == 0) {
 
 							count += sqlOperations.deleteTablePart(tableRed, database, coloumnInCondition, operator,
 									valueTobeCombared, isWhereExist, isStarExist);
@@ -259,8 +287,8 @@ public class HandelXml {
 						counter++;
 						Row row = new Row(coloumns, values);
 						tableRed.create(row);
-						coloumns.clear();
-						values.clear();
+						coloumns = new ArrayList<String>();
+						values = new ArrayList<String>();
 					} else {
 						coloumns.add(endElement.getName().getLocalPart());
 						if (coloumns.size() > values.size()) {
@@ -291,7 +319,7 @@ public class HandelXml {
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = factory
-					.createXMLEventReader(new FileReader(database.getName() + "/" + TableName + ".XmL"));
+					.createXMLEventReader(new FileReader(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
 			int counter = 0;
 			while (eventReader.hasNext()) {
 
@@ -313,7 +341,7 @@ public class HandelXml {
 						tableRed.rows.clear();
 						break;
 					} else if (endElement.getName().getLocalPart().equalsIgnoreCase("row")) {
-						if (counter % 20 == 0) {
+						if (counter % 15000 == 0) {
 
 							count += sqlOperations.processTablePart(coloumsnName, coloumsnValues, tableRed, database,
 									coloumnInCondition, operator, valueTobeCombared, isWhereExist);
@@ -342,7 +370,8 @@ public class HandelXml {
 	}
 
 	public void createDtdFile(String databaseName, Table table) {
-		File tableFile = new File("databases/" + databaseName + "/" + table.getName() + ".dtd");
+		System.out.println(table.coloumn.get("name"));
+		File tableFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + table.getName() + ".dtd");
 		try {
 			tableFile.createNewFile();
 		} catch (IOException e1) {
@@ -363,7 +392,9 @@ public class HandelXml {
 		sw.write("]>");
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(databaseName + "/" + table.getName() + ".dtd", "UTF-8");
+			File fp = new File("databases"+ System.getProperty("file.separator")  + databaseName + System.getProperty("file.separator") + table.getName() + ".dtd");
+			fp.createNewFile();
+			writer = new PrintWriter(fp, "UTF-8");
 			writer.println(sw);
 			writer.close();
 		} catch (Exception e) {
@@ -372,7 +403,7 @@ public class HandelXml {
 	}
 
 	public static void readAllDatabasesBasicInfos(SQL sql) {
-		File databases = new File("databases");
+		File databases = new File(System.getProperty("user.dir")+ System.getProperty("file.separator") +"databases");
 		FileFilter directoryFileFilter = new FileFilter() {
 			@Override
 			public boolean accept(File file) {
@@ -381,23 +412,19 @@ public class HandelXml {
 		};
 		// if the directory does not exist, create it
 		if (!databases.exists()) {
-		    System.out.println("creating directory: " + databases.getName());
-		    boolean result = false;
+			System.out.println("creating directory: " + databases.getName());
+			boolean result = false;
 
-		    try{
-		        databases.mkdir();
-		        result = true;
-		    } 
-		    catch(SecurityException se){
-		        //handle it
-		    }        
-		    if(result) {    
-		        System.out.println("DIR created");  
-		    }
+			try {
+				databases.mkdir();
+			} catch (SecurityException se) {
+				// handle it
+			}
 		}
 
 		File[] directoryListAsFiles = databases.listFiles(directoryFileFilter);
 		List<String> databasesNames = new ArrayList<String>(directoryListAsFiles.length);
+		System.out.println("num of dir " + directoryListAsFiles.length);
 		for (File database : directoryListAsFiles) {
 			databasesNames.add(database.getName());
 			DataBase compositeDatabase = new DataBase();
@@ -406,7 +433,7 @@ public class HandelXml {
 		}
 		System.out.println(databasesNames);
 		for (int i = 0; i < databasesNames.size(); i++) {
-			File database = new File("databases/" + databasesNames.get(i));
+			File database = new File("databases"+ System.getProperty("file.separator")  + databasesNames.get(i));
 
 			File[] tables = database.listFiles(new FileFilter() {
 				@Override
@@ -418,6 +445,7 @@ public class HandelXml {
 			for (File currentFile : tables) {
 				List<String> fileContent = read(currentFile);
 				Map<String, String> columns = getColumnsInfo(fileContent);
+				// if(columns == null) return;
 				Table table = new Table();
 				table.coloumn = columns;
 				table.setName(currentFile.getName().substring(0, currentFile.getName().length() - 4));
@@ -451,6 +479,8 @@ public class HandelXml {
 	}
 
 	static Map<String, String> getColumnsInfo(List<String> fileContent) {
+		if (fileContent.isEmpty())
+			return null;
 		fileContent.remove(0);
 		fileContent.remove(0);
 		fileContent.remove(0);

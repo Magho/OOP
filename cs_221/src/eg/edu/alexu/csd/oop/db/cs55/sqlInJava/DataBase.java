@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class DataBase implements IComponent {
 
 	String DataBaseName;
-	ArrayList<Table> tables = new ArrayList<Table>();
+	public ArrayList<Table> tables = new ArrayList<Table>();
 
 	public void create(Table component) {
 		

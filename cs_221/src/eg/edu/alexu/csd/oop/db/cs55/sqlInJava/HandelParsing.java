@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import eg.edu.alexu.csd.oop.db.cs55.IValidator;
 import eg.edu.alexu.csd.oop.db.cs55.ValidationFactory;
 
+
 public class HandelParsing {
 
 	private String SQLCommand = "";
@@ -18,7 +19,7 @@ public class HandelParsing {
 	private Pattern create_database = Pattern.compile("create database");
 	private Pattern create_table = Pattern.compile("create table");
 	private Pattern drop_database = Pattern.compile("drop database");
-	private Pattern drop_table = Pattern.compile("create database");
+	private Pattern drop_table = Pattern.compile("drop table");
 	private Pattern insert = Pattern.compile("insert");
 	private Pattern update = Pattern.compile("update");
 	private Pattern delete = Pattern.compile("delete");
@@ -53,22 +54,18 @@ public class HandelParsing {
 		sql = SQL.CreateSQL();
 		HandelXml.readAllDatabasesBasicInfos(sql);
 		sqlOperations = new SqlOperations(sql, getCurrentDatabaseName());
-
 	}
 
-	public int setSQLCommand(String SQLCommand) {
+	public int setSQLCommand(String SQLCommand) throws SQLException {
 		this.SQLCommand = SQLCommand;
-		try {
-			getSQlCommand();
-			setMatchers();
-			return determineOperation();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return 0;
+		getSQlCommand();
+		setMatchers();
+		return determineOperation();
 	}
 
 	public void SetCurrentDatabaseName(String dataBaseName, boolean dropIfExists) throws SQLException {
+		currentDatabase = dataBaseName;
+		sqlOperations.setCurrentDatabase(dataBaseName);
 		if (sqlOperations.check_If_Database_Is_Already_exists(dataBaseName)) {
 			if (dropIfExists) {
 				sqlOperations.drop_database(dataBaseName);
@@ -77,7 +74,6 @@ public class HandelParsing {
 				this.currentDatabase = dataBaseName;
 			}
 		} else {
-			System.out.println("set data");
 			sqlOperations.create_database(dataBaseName);
 			this.currentDatabase = dataBaseName;
 		}
@@ -85,11 +81,11 @@ public class HandelParsing {
 	}
 
 	// get validated command
-	private void getSQlCommand() {
+	private void getSQlCommand() throws SQLException {
 		IValidator validator = ValidationFactory.getValidator(SQLCommand);
 		if (validator.IsValid(SQLCommand)) {
 		} else {
-			throw new RuntimeException("unValid Query");
+			throw new SQLException("unValid Query");
 		}
 		SQLCommand = validator.getSQL();
 	}
@@ -114,6 +110,7 @@ public class HandelParsing {
 			get_drop_table_info();
 			return 0;
 		} else if (insert_Matcher.find()) {
+			System.out.println("I am in");
 			return get_insert_info();
 		} else if (update_Matcher.find()) {
 			return get_update_info();
@@ -122,9 +119,9 @@ public class HandelParsing {
 		} else if (select_Matcher.find()) {
 			table = get_select_info();
 			return 0;
-		} else {
-			throw null;// error unknown command
-		}
+		} else {}
+			throw new RuntimeException("Invalid query");// error unknown command
+		
 	}
 
 	public Table returnSelectedTable() {
@@ -142,7 +139,9 @@ public class HandelParsing {
 
 	public void get_create_table_info() throws SQLException {
 		String processedSQLCommand = new String();
-		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length() - 1);
+		System.out.println(SQLCommand + "nammmmmmmmmmmmmmmme");
+
+		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = null;
 		Map<String, String> coloumn = new HashMap<>();
 		String regex = "((?<=(create\\stable\\s))[\\w\\d_]+(?=\\s+))";
@@ -162,55 +161,72 @@ public class HandelParsing {
 			dataType = splitedData[1];
 			coloumn.put(key, dataType);
 		}
+		System.out.println(coloumn);
+		System.out.println(tableName + "nammmmmmmmmmmmmmmme");
+		sqlOperations.setCurrentDatabase(currentDatabase);
 		sqlOperations.create_table(tableName, coloumn);
 	}
 
 	public void get_drop_database_info() throws SQLException {
-		create_database_Matcher.reset(SQLCommand);
-		create_database_Matcher.find();
-		int indexOfDataBaseName = create_database_Matcher.end() + 2;
+		drop_database_Matcher.reset(SQLCommand);
+		drop_database_Matcher.find();
+		int indexOfDataBaseName = drop_database_Matcher.end() + 1;
 		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
+		sqlOperations.setCurrentDatabase(DataBaseName);
 		sqlOperations.drop_database(DataBaseName);
 	}
 
 	public void get_drop_table_info() throws SQLException {
-		create_database_Matcher.reset(SQLCommand);
-		create_database_Matcher.find();
-		int indexOfDataBaseName = create_database_Matcher.end() + 2;
+		drop_table_Matcher.reset(SQLCommand);
+		drop_table_Matcher.find();
+		int indexOfDataBaseName = drop_table_Matcher.end() + 1;
 		String DataTable = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
+		if (DataTable.charAt(DataTable.length()-1) == ';'){
+			DataTable = DataTable.substring(0, DataTable.length()-1);
+		}
+		System.out.println(DataTable);
+		System.out.println(currentDatabase);
+		sqlOperations.setCurrentDatabase(currentDatabase);
 		sqlOperations.drop_table(DataTable);
 	}
 
 	public int get_insert_info() throws SQLException {
 		String tableName = null;
-		ArrayList<String> groups = new ArrayList<>();
+		ArrayList<String> groups = new ArrayList<String>();
 		ArrayList<String[]> coloumnsValues = new ArrayList<>();
-		String regex = "((?<=(insert\\sinto\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()([\\w\\d_,]+)+(?=\\)))";
-
+		String regex = "((?<=(insert\\sinto\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()([\\w\\d_,\"]+)+(?=\\)))";
 		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-
 		Matcher m = re.matcher(SQLCommand);
 		while (m.find()) {
 			groups.add(m.group(0));
 		}
 		tableName = groups.get(0);
-		String[] coloumnsNames = groups.get(1).split(" ");
+		String[] coloumnsNames = groups.get(1).split(",");
 		for (int i = 2; i < groups.size(); i++) {
-			coloumnsValues.add(groups.get(i).split(" "));
+			coloumnsValues.add(groups.get(i).split(","));
 		}
 
 		ArrayList<String> coloumnNames = new ArrayList<String>();
 		for (int i = 0; i < coloumnsNames.length; i++) {
 			coloumnNames.add(coloumnsNames[i]);
 		}
-
+		sqlOperations.setCurrentDatabase(currentDatabase);
+		int i = 0;
+		for(String str : coloumnsValues.get(0)){
+			if(str.contains("\"")){
+				str = str.substring(1, str.length()-1);
+				coloumnsValues.get(0)[i] = str;
+			}
+			i++;
+		}
 		sqlOperations.insert(tableName, coloumnNames, coloumnsValues);
+		System.out.println("solved");
 		return coloumnsValues.size();
 	}
 
 	public int get_update_info() throws SQLException {
 		String processedSQLCommand = new String();
-		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length() - 1);
+		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		ArrayList<String> coloumnsNames = new ArrayList<String>();
 		ArrayList<String> coloumnsValues = new ArrayList<String>();
 		String tableName = "";
@@ -229,21 +245,25 @@ public class HandelParsing {
 				processedSQLCommand.lastIndexOf("where") - 1);
 		String[] splitedDataAfterSet = dataAfterSet.split(",");
 		for (String s : splitedDataAfterSet) {
-			String data[] = s.split(" ");
-			coloumnsNames.add(data[0]);
-			String coloumnValue = data[2];
-			if (coloumnValue.charAt(0) == '\'') {
-				coloumnValue = coloumnValue.substring(1, coloumnValue.length() - 1);
+			String data[] = s.split("[><=]=?");
+			coloumnInCondition = data[0];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
+			valueToBecombared = data[1];
+			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
+			if (valueToBecombared.charAt(0) == '\'') {
+				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
+			coloumnsNames.add(coloumnInCondition);
+			coloumnsValues.add(valueToBecombared);
 		}
 		if (isWhereExist) {
-			isStarExist = false;
-			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("where") + 6,
+			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.indexOf("where") + 6,
 					processedSQLCommand.length());
-			String data[] = processedSQLCommand.split(" ");
+			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = data[1];
-			valueToBecombared = data[2];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
+			valueToBecombared = data[1];
+			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -254,28 +274,39 @@ public class HandelParsing {
 
 	public int get_delete_info() throws SQLException {
 		String processedSQLCommand = new String();
-		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length() - 1);
+		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = "";
 		boolean isStarExist = true;
 		boolean isWhereExist = processedSQLCommand.toLowerCase().contains("where");
+		if(!isWhereExist && processedSQLCommand.contains("*") ){
+			tableName = (processedSQLCommand.split("\\*")[1]).split(" ")[2];
+		}
+		else{
+			String regex = "((?<=(delete\\sfrom\\s))[\\w\\d_]+(?=\\s+)?)";
+			Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+			Matcher m = re.matcher(processedSQLCommand);
+			if (m.find()) {
+				tableName = m.group(0);
+			}
+
+		}
 		String coloumnInCondition = null;
 		String operator = null;
 		String valueToBecombared = null;
-		String regex = "((?<=(delete\\sfrom\\s))[\\w\\d_]+(?=\\s+))";
-		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-
-		Matcher m = re.matcher(processedSQLCommand);
-		if (m.find()) {
-			tableName = m.group(0);
-		}
-		if (isWhereExist) {
+				if (isWhereExist) {
 			isStarExist = false;
-			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("where") + 6,
+			tableName = processedSQLCommand
+					.substring(processedSQLCommand
+							.indexOf("from") + 5,
+					processedSQLCommand.indexOf("where") - 1);
+			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.indexOf("where") + 6,
 					processedSQLCommand.length());
-			String data[] = processedSQLCommand.split(" ");
+			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = data[1];
-			valueToBecombared = data[2];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
+			valueToBecombared = data[1];
+			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -286,40 +317,54 @@ public class HandelParsing {
 
 	public Table get_select_info() throws SQLException {
 		String processedSQLCommand = new String();
-		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length() - 1);
-		ArrayList<String> coloumnsName = new ArrayList<String>();
+		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
+		ArrayList<String> coloumnsName = null;
 		boolean isStarExist = processedSQLCommand.toLowerCase().contains("*");
 		boolean isWhereExist = processedSQLCommand.toLowerCase().contains("where");
 		String tableName = "";
 		String coloumnInCondition = null;
 		String operator = null;
 		String valueToBecombared = null;
-		ArrayList<String> ColoumnsNames = null;
 		if (!isStarExist) {
-			String[] splitedColumnsNames = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("select") + 7,
-					processedSQLCommand.lastIndexOf("from") - 1).split(",");
-			for (String s : splitedColumnsNames) {
-				coloumnsName.add(s);
+			coloumnsName = new ArrayList<>();
+			String[] splitedColumnsNames;
+			String subColumnsNames = processedSQLCommand.substring(processedSQLCommand.indexOf("select") + 7,
+					processedSQLCommand.indexOf("from") - 1);
+			if(subColumnsNames.contains(",")){
+					splitedColumnsNames = subColumnsNames.split(",");
+				
+				for (String s : splitedColumnsNames) {
+					coloumnsName.add(s);
+				}
+			}
+			else{
+				coloumnsName.add(subColumnsNames);
 			}
 		}
 		if (isWhereExist) {
-			tableName = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("FROM") + 5,
-					processedSQLCommand.lastIndexOf("WHERE") - 1);
-			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("where") + 6,
+			tableName = processedSQLCommand
+					.substring(processedSQLCommand
+							.indexOf("from") + 5,
+					processedSQLCommand.indexOf("where") - 1);
+			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.indexOf("where") + 6,
 					processedSQLCommand.length());
-			String data[] = processedSQLCommand.split(" ");
+			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = data[1];
-			valueToBecombared = data[2];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
+			valueToBecombared = data[1];
+			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
 		} else {
-			tableName = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("FROM") + 5,
+			tableName = processedSQLCommand.substring(processedSQLCommand.indexOf("from") + 5,
 					processedSQLCommand.length());
 		}
-		return sqlOperations.select(coloumnsName, tableName, coloumnInCondition, operator, valueToBecombared,
-				ColoumnsNames, isWhereExist, isStarExist);
+		System.out.println();
+		Table tableToBeReturned = sqlOperations.select(tableName, coloumnInCondition, operator, valueToBecombared,
+				coloumnsName, isWhereExist, isStarExist);
+
+		return tableToBeReturned;
 	}
 
 }

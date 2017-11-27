@@ -14,7 +14,7 @@ public class SQL implements IComponent {
 		return sql;
 	}
 
-	ArrayList<DataBase> DataBases = new ArrayList<DataBase>();
+	public ArrayList<DataBase> DataBases = new ArrayList<DataBase>();
 
 	public void create(DataBase component) {
 		DataBases.add(component);

@@ -17,6 +17,10 @@ public class SqlOperations {
 		this.handelXml = new HandelXml(sql, currentDatabase, this);
 	}
 
+	public void setCurrentDatabase(String name){
+		this.currentDatabase = name;
+	}
+
 	public void create_database(String DataBaseName) throws SQLException {
 		DataBase database = new DataBase();
 		if (!check_If_Database_Is_Already_exists(DataBaseName)) {
@@ -42,18 +46,21 @@ public class SqlOperations {
 		database.setName(DataBaseName);
 		sql.DataBases.add(database);
 		currentDatabase = DataBaseName;// setting name to current database
+		System.out.println(DataBaseName + "");
 		handelXml.create_database_toXML(database.getName());
 	}
 
 	private void Handel_Create_Database_If_Exists_Before() throws SQLException {
-		//throw new SQLException();
+		throw new SQLException("Data base exists already");
 	}
 
 	public void create_table(String TableName, Map<String, String> coloumn) throws SQLException {
+		
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
+				System.out.println(currentDatabase);
 				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn);
 			} else {
 				Handel_Database_Is_Not_Exists();
@@ -64,7 +71,7 @@ public class SqlOperations {
 	private DataBase get_Current_Database() {
 		int dataBaseIndex = 0;
 		for (int i = 0; i < sql.DataBases.size(); i++) {
-			if (sql.DataBases.get(i).getName().equals(currentDatabase)) {
+			if (sql.DataBases.get(i).getName().equalsIgnoreCase(currentDatabase)) {
 				dataBaseIndex = i;
 				break;
 			}
@@ -74,11 +81,12 @@ public class SqlOperations {
 	}
 
 	private void Handel_no_Current_DataBase_found() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("No current db");
 	}
 
 	private boolean Check_If_table_Is_Already_Exists(String TableName, DataBase database) {
 		boolean tableexistsBefore = false;
+		System.out.println(database.tables + " " + database.getName());
 		for (int i = 0; i < database.tables.size(); i++) {
 			if (database.tables.get(i).getName().equals(TableName)) {
 				tableexistsBefore = true;
@@ -92,19 +100,20 @@ public class SqlOperations {
 		Table table = new Table();
 		table.setName(TableName);
 		table.addColoumns(coloumn);
-		database.tables.add(table);
+		get_Current_Database().tables.add(table);
 		System.out.println(table.getName() + ">>>" + TableName);
+		System.out.println(get_Current_Database().tables);
 		handelXml.create_table_toXML(database.getName(), TableName);
 		handelXml.createDtdFile(database.DataBaseName,table);
 	}
 
 	private void Handel_Create_Table_If_Exists_Before() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("table exists before");
 
 	}
 
 	private void Handel_Database_Is_Not_Exists() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("database doesn't exist");
 	}
 
 	private void Handel_Create_Table_If_Database_Is_Already_exists(String TableName, Map<String, String> coloumn)
@@ -119,9 +128,11 @@ public class SqlOperations {
 	}
 
 	public void drop_database(String DataBaseName) throws SQLException {
-		if (currentDatabase != null) {
+		System.out.println("from drop_data" + currentDatabase);
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
+			System.out.println(currentDatabase);
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				DataBase database = get_Current_Database();
 				Handel_Drop_Database_If_Already_Exist(database);
@@ -137,7 +148,7 @@ public class SqlOperations {
 	}
 
 	public void drop_table(String TableName) throws SQLException {
-		if (currentDatabase != null) {
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
@@ -170,23 +181,26 @@ public class SqlOperations {
 	}
 
 	private void Handel_Table_If_Not_Exists() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("table doesnot exist");
 	}
 
 	private void Handel_Drop_Table_If_Exists(String TableName, DataBase database) {
 		Table table = get_Current_Table(TableName, database);
 		database.tables.remove(table);
 		handelXml.drop_table_toXML(database.getName(), table.getName());
+		handelXml.drop_table_toDTD(database.getName(), table.getName());
+		
 	}
 
 	public void insert(String TableName, ArrayList<String> ColoumnName, ArrayList<String[]> coloumnsValues)
 			throws SQLException {
-		if (currentDatabase != null) {
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				DataBase database = get_Current_Database();
 				if (Check_If_table_Is_Already_Exists(TableName, database)) {
+					System.out.println("in");
 					Handel_Insert_If_Table_Exists(TableName, database, ColoumnName, coloumnsValues);
 				} else {
 					Handel_Table_If_Not_Exists();
@@ -204,7 +218,7 @@ public class SqlOperations {
 		newInsertedRaws.setName(TableName);
 		for (int i = 0; i < coloumnsValues.size(); i++) {
 			ArrayList<String> coloumnvalues = new ArrayList<String>();
-			for (int j = 0; j < coloumnsValues.size(); j++) {
+			for (int j = 0; j < coloumnsValues.get(i).length; j++) {
 				coloumnvalues.add(coloumnsValues.get(i)[j]);
 			}
 			Row row = new Row(ColoumnName, coloumnvalues);
@@ -218,7 +232,7 @@ public class SqlOperations {
 			String coloumnInCondition, String operator, String valueTobeCombared, boolean isWhereExist,
 			boolean isStarExist) throws SQLException {
 
-		if (currentDatabase != null) {
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 			return 0;
 		} else {
@@ -253,8 +267,8 @@ public class SqlOperations {
 		count = handelXml.update_toXML(coloumsnName, coloumsnValues, TableName, database, coloumnInCondition, operator,
 				valueTobeCombared, isWhereExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File(database.getName() + "/" + TableName + "Temp.XmL");
-		file.renameTo(new File(database.getName() + "/" + TableName + ".XmL"));
+		File file = new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + "Temp.XmL");
+		file.renameTo(new File("databases"+ System.getProperty("file.separator")  +database.getName() + System.getProperty("file.separator") +TableName + ".XmL"));
 		return count;
 	}
 
@@ -338,16 +352,16 @@ public class SqlOperations {
 	}
 
 	private void handle_String_And_Comparing_With_Operator_Rather_Than_Equal_() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("Inequal comparing varchar column type");
 	}
 
 	private void Handel_Update_If_Table_Not_Exists() throws SQLException {
-		throw new SQLException();
+		throw new SQLException("Table doesnot exist in case of update");
 	}
 
 	public int delete(String tableName, String coloumnInCondition, String operator, String valueTobeCombared,
 			boolean isWhereExist, boolean isStarExist) throws SQLException {
-		if (currentDatabase != null) {
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 			return 0;
 		} else {
@@ -380,8 +394,9 @@ public class SqlOperations {
 		count = handelXml.deleteFromXml(TableName, database, coloumnInCondition, operator, valueTobeCombared, isWhereExist,
 				isStarExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File(database.getName() + "/" + TableName + "Temp.XmL");
-		file.renameTo(new File(database.getName() + "/" + TableName + ".XmL"));
+		File file = new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") +TableName + "Temp.XmL");
+		
+		file.renameTo(new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
 		return count;
 	}
 
@@ -391,11 +406,11 @@ public class SqlOperations {
 		int count = 0;
 		Table table = tableToBeDeleted;
 		if (isStarExist) {
-
 			handelXml.drop_table_toXML(database.getName(), tableToBeDeleted.getName());
 			handelXml.create_table_toXML(database.getName(), tableToBeDeleted.getName());
 
 		} else {
+		
 			for (int i = 0; i < table.rows.size(); i++) {
 				if (isWhereExist) {
 					if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
@@ -405,6 +420,7 @@ public class SqlOperations {
 									.compareToIgnoreCase(valueTobeCombared) == 0) {
 
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						} else {
@@ -416,18 +432,21 @@ public class SqlOperations {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
 									.compareToIgnoreCase(valueTobeCombared) == 0) {
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						} else if (operator.equals(">")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
 									.compareToIgnoreCase(valueTobeCombared) < 0) {
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						} else if (operator.equals("<")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
 									.compareToIgnoreCase(valueTobeCombared) > 0) {
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						} else if (operator.equals("<=")) {
@@ -436,6 +455,7 @@ public class SqlOperations {
 									| table.rows.get(i).coloumn.get(coloumnInCondition)
 											.compareToIgnoreCase(valueTobeCombared) < 0) {
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						} else if (operator.equals(">=")) {
@@ -444,6 +464,7 @@ public class SqlOperations {
 									| table.rows.get(i).coloumn.get(coloumnInCondition)
 											.compareToIgnoreCase(valueTobeCombared) > 0) {
 								table.rows.remove(i);
+								i--;
 								count++;
 							}
 						}
@@ -451,18 +472,19 @@ public class SqlOperations {
 				} else {
 					// no where condition
 					table.rows.remove(i);
+					i--;
 					count++;
 				}
 			}
+			handelXml.insert_toXML(database.getName(), table);
 		}
-		handelXml.insert_toXML(database.getName(), table);
 		return count;
 	}
 
-	public Table select(ArrayList<String> coloumsnName, String tableName, String coloumnInCondition, String operator,
+	public Table select( String tableName, String coloumnInCondition, String operator,
 			String valueTobeCombared, ArrayList<String> ColoumnsNames, boolean isWhereExist, boolean isStarExist)
 			throws SQLException {
-		if (currentDatabase != null) {
+		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
@@ -480,8 +502,10 @@ public class SqlOperations {
 			boolean isStarExist) throws SQLException {
 		DataBase database = get_Current_Database();
 		if (Check_If_table_Is_Already_Exists(TableName, database)) {
-			return handelXml.select_toXML(TableName, database, coloumnInCondition, operator, valueTobeCombared,
+			Table returnedTable = handelXml.select_toXML(TableName, database, coloumnInCondition, operator, valueTobeCombared,
 					ColoumnsNames, isWhereExist, isStarExist);
+			
+			return returnedTable;
 		} else {
 			Handel_Update_If_Table_Not_Exists();
 			return null;
@@ -492,132 +516,149 @@ public class SqlOperations {
 			String operator, String valueTobeCombared, ArrayList<String> ColoumnsNames, boolean isWhereExist,
 			boolean isStarExist) throws SQLException {
 		Table table = tableToBeSelected;
+
+
 		Table newTable = new Table();
-		for (int i = 0; i < table.rows.size(); i++) {
-			if (isStarExist) {
-				if (isWhereExist) {
-					if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
-						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
+		if (ColoumnsNames == null) {
+			ColoumnsNames = tableToBeSelected.rows.get(0).coloumnName;
+			newTable.addColoumns(table.coloumn);
+
+		} else {
+			newTable.addColoumns(tableToBeSelected.returnSelectedColoumns(ColoumnsNames));
+		}
+		if(table.rows.size() != 0){
+			System.out.println(table.rows.size() + " size");
+
+			for (int i = 0; i < table.rows.size(); i++) {
+				if (isStarExist) {
+					if (isWhereExist) {
+						if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
+							if (operator.equals("=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+								}
+							} else {
+								handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
 							}
 						} else {
-							handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
+							// as if not VARCHAR then INT as it is validated
+							if (operator.equals("=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0) {
+	
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+	
+								}
+							} else if (operator.equals(">")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) < 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals("<")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) > 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals("<=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0
+										| table.rows.get(i).coloumn.get(coloumnInCondition)
+												.compareToIgnoreCase(valueTobeCombared) < 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals(">=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0
+										| table.rows.get(i).coloumn.get(coloumnInCondition)
+												.compareToIgnoreCase(valueTobeCombared) > 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
+									newTable.rows.add(row);
+								}
+							}
 						}
 					} else {
-						// as if not VARCHAR then INT as it is validated
-						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals(">")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals("<")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals("<=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) < 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals(">=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) > 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
-								newTable.rows.add(row);
-							}
-						}
+						// no where condition
+						Row row = new Row(ColoumnsNames, table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+						newTable.rows.add(row);
 					}
 				} else {
-					// no where condition
-					Row row = new Row(ColoumnsNames, table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-					newTable.rows.add(row);
-				}
-			} else {
-				if (isWhereExist) {
-					if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
-						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
+					if (isWhereExist) {
+						if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
+							if (operator.equals("=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							} else {
+								handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
 							}
 						} else {
-							handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
+							// as if not VARCHAR then INT as it is validated
+							if (operator.equals("=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals(">")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) < 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals("<")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) > 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals("<=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0
+										| table.rows.get(i).coloumn.get(coloumnInCondition)
+												.compareToIgnoreCase(valueTobeCombared) < 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							} else if (operator.equals(">=")) {
+								if (table.rows.get(i).coloumn.get(coloumnInCondition)
+										.compareToIgnoreCase(valueTobeCombared) == 0
+										| table.rows.get(i).coloumn.get(coloumnInCondition)
+												.compareToIgnoreCase(valueTobeCombared) > 0) {
+									Row row = new Row(ColoumnsNames,
+											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+									newTable.rows.add(row);
+								}
+							}
 						}
 					} else {
-						// as if not VARCHAR then INT as it is validated
-						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals(">")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals("<")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals("<=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) < 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
-							}
-						} else if (operator.equals(">=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) > 0) {
-								Row row = new Row(ColoumnsNames,
-										table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-								newTable.rows.add(row);
-							}
-						}
+						// no where condition
+						Row row = new Row(ColoumnsNames, table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
+						newTable.rows.add(row);
 					}
-				} else {
-					// no where condition
-					Row row = new Row(ColoumnsNames, table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
-					newTable.rows.add(row);
 				}
 			}
 		}
+			
+		
 		return newTable;
 	}
 
