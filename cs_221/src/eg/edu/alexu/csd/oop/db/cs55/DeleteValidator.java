@@ -11,9 +11,9 @@ public class DeleteValidator extends Validation{
 		boolean valid;
 		String processedSqlCommand = sqlLine.toLowerCase();
 		processedSqlCommand = removeUnusedSpaces(processedSqlCommand);
-		String regex = "delete\\s(\\*\\s)?from\\s([a-z^][a-z0-9]*)(\\swhere\\s([a-z][a-z0-9]*)\\s?[<>=]=?\\s?[\"]?[a-z0-9]+[\"]?)?";
+		String regex = "delete\\sfrom\\s([a-z][a-z0-9_]*)(\\swhere\\s([a-z][a-z0-9_]*)\\s?[<>=]=?\\s?[\"']?[a-z0-9_\\s]+[\"']?)?";
 		valid = processedSqlCommand.matches(regex);
-		String reg = ".+where\\s.+[<>=][=]?\\s?(\"?[a-z0-9]+\"?)";
+		String reg = ".+where\\s.+[<>=][=]?\\s?(\"?'?[a-z0-9]+\"?'?)";
 		if(processedSqlCommand.contains("where")){
 			String val = processedSqlCommand.replaceAll(reg, "$1");
 			if((val.contains("\"")|| val.contains("\'"))){
@@ -21,7 +21,7 @@ public class DeleteValidator extends Validation{
 				val = val.substring(0, val.length());
 			}else{
 				val = val.substring(0, val.length());
-				valid = valid && val.matches("[^a-z]+");
+				valid = valid && val.matches("[^a-z0-9]+");
 			}
 		}
 		if(valid){

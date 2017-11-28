@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs55.sqlInJava;
+package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import eg.edu.alexu.csd.oop.db.cs55.IValidator;
-import eg.edu.alexu.csd.oop.db.cs55.ValidationFactory;
-
 
 public class HandelParsing {
 
@@ -38,14 +34,14 @@ public class HandelParsing {
 	SqlOperations sqlOperations;
 
 	private void setMatchers() {
-		create_database_Matcher = create_database.matcher(SQLCommand);
-		create_table_Matcher = create_table.matcher(SQLCommand);
-		drop_database_Matcher = drop_database.matcher(SQLCommand);
-		drop_table_Matcher = drop_table.matcher(SQLCommand);
-		insert_Matcher = insert.matcher(SQLCommand);
-		update_Matcher = update.matcher(SQLCommand);
-		delete_Matcher = delete.matcher(SQLCommand);
-		select_Matcher = select.matcher(SQLCommand);
+		create_database_Matcher = create_database.matcher(SQLCommand.toLowerCase());
+		create_table_Matcher = create_table.matcher(SQLCommand.toLowerCase());
+		drop_database_Matcher = drop_database.matcher(SQLCommand.toLowerCase());
+		drop_table_Matcher = drop_table.matcher(SQLCommand.toLowerCase());
+		insert_Matcher = insert.matcher(SQLCommand.toLowerCase());
+		update_Matcher = update.matcher(SQLCommand.toLowerCase());
+		delete_Matcher = delete.matcher(SQLCommand.toLowerCase());
+		select_Matcher = select.matcher(SQLCommand.toLowerCase());
 	}
 
 	// constructor made for executing Query statment
@@ -110,7 +106,7 @@ public class HandelParsing {
 			get_drop_table_info();
 			return 0;
 		} else if (insert_Matcher.find()) {
-			System.out.println("I am in");
+			
 			return get_insert_info();
 		} else if (update_Matcher.find()) {
 			return get_update_info();
@@ -129,17 +125,19 @@ public class HandelParsing {
 	}
 
 	public void get_create_database_info() throws SQLException {
-		create_database_Matcher.reset(SQLCommand);
+		create_database_Matcher.reset(SQLCommand.toLowerCase());
 		create_database_Matcher.find();
 		// +2 for escaping space and set index to the first element of the name
 		int indexOfDataBaseName = create_database_Matcher.end() + 1;
-		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()-1).trim();
+		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
+
+		SetCurrentDatabaseName(DataBaseName, true);
 		sqlOperations.create_database(DataBaseName);
 	}
 
 	public void get_create_table_info() throws SQLException {
 		String processedSQLCommand = new String();
-		System.out.println(SQLCommand + "nammmmmmmmmmmmmmmme");
+	
 
 		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = null;
@@ -161,8 +159,7 @@ public class HandelParsing {
 			dataType = splitedData[1];
 			coloumn.put(key, dataType);
 		}
-		System.out.println(coloumn);
-		System.out.println(tableName + "nammmmmmmmmmmmmmmme");
+		
 		sqlOperations.setCurrentDatabase(currentDatabase);
 		sqlOperations.create_table(tableName, coloumn);
 	}
@@ -184,8 +181,7 @@ public class HandelParsing {
 		if (DataTable.charAt(DataTable.length()-1) == ';'){
 			DataTable = DataTable.substring(0, DataTable.length()-1);
 		}
-		System.out.println(DataTable);
-		System.out.println(currentDatabase);
+		
 		sqlOperations.setCurrentDatabase(currentDatabase);
 		sqlOperations.drop_table(DataTable);
 	}
@@ -194,24 +190,43 @@ public class HandelParsing {
 		String tableName = null;
 		ArrayList<String> groups = new ArrayList<String>();
 		ArrayList<String[]> coloumnsValues = new ArrayList<>();
-		String regex = "((?<=(insert\\sinto\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()([\\w\\d_,\"]+)+(?=\\)))";
+		ArrayList<String> coloumnNames = new ArrayList<String>();
+		String regex = "((?<=(INSERT\\sINTO\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()(\\s*[\\w\\d_,'?\"?]+\\s*)+(?=\\)))";
 		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = re.matcher(SQLCommand);
 		while (m.find()) {
 			groups.add(m.group(0));
 		}
 		tableName = groups.get(0);
-		String[] coloumnsNames = groups.get(1).split(",");
-		for (int i = 2; i < groups.size(); i++) {
-			coloumnsValues.add(groups.get(i).split(","));
+		if(!SQLCommand.substring(SQLCommand.lastIndexOf(tableName)+tableName.length(), SQLCommand.lastIndexOf("values")).equals(" ")){
+			String[] coloumnsNames = groups.get(1).split(",");
+			for (int i = 0; i < coloumnsNames.length; i++) {
+				coloumnNames.add(coloumnsNames[i]);
+			}
+			for (int i = 2; i < groups.size(); i++) {
+				String[] data = groups.get(i).split(",");
+				for(int j = 0; j < data.length; j++){
+					if(data[j].charAt(0) == '\'' || data[j].charAt(0) == '\"'){
+						data[j] = data[j].substring(1, data[j].length()-1);
+					}
+				}
+				coloumnsValues.add(data);
+			}
 		}
-
-		ArrayList<String> coloumnNames = new ArrayList<String>();
-		for (int i = 0; i < coloumnsNames.length; i++) {
-			coloumnNames.add(coloumnsNames[i]);
+		else{
+			for (int i = 1; i < groups.size(); i++) {
+				String[] data = groups.get(i).split(",");
+				for(int j = 0; j < data.length; j++){
+					if(data[j].charAt(0) == '\'' || data[j].charAt(0) == '\"'){
+						data[j] = data[j].substring(1, data[j].length()-1);
+					}
+				}
+				coloumnsValues.add(data);
+			}
 		}
 		sqlOperations.setCurrentDatabase(currentDatabase);
 		int i = 0;
+		try {
 		for(String str : coloumnsValues.get(0)){
 			if(str.contains("\"")){
 				str = str.substring(1, str.length()-1);
@@ -219,10 +234,14 @@ public class HandelParsing {
 			}
 			i++;
 		}
+		} catch(Exception e) {
+			throw new SQLException(SQLCommand);
+		}
 		sqlOperations.insert(tableName, coloumnNames, coloumnsValues);
-		System.out.println("solved");
+		
 		return coloumnsValues.size();
 	}
+
 
 	public int get_update_info() throws SQLException {
 		String processedSQLCommand = new String();
@@ -241,15 +260,20 @@ public class HandelParsing {
 		if (m.find()) {
 			tableName = m.group(0);
 		}
-		String dataAfterSet = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("set") + 4,
+		String dataAfterSet; 
+		if(isWhereExist)
+			dataAfterSet = processedSQLCommand.substring(processedSQLCommand.lastIndexOf("set") + 4,
 				processedSQLCommand.lastIndexOf("where") - 1);
+		else{
+			dataAfterSet = processedSQLCommand.substring(processedSQLCommand.indexOf("set") + 4);
+		}
 		String[] splitedDataAfterSet = dataAfterSet.split(",");
 		for (String s : splitedDataAfterSet) {
 			String data[] = s.split("[><=]=?");
 			coloumnInCondition = data[0];
 			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
+			
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -263,11 +287,11 @@ public class HandelParsing {
 			coloumnInCondition = data[0];
 			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
+			
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
-		}
+		}	
 		return sqlOperations.update(coloumnsNames, coloumnsValues, tableName, coloumnInCondition, operator,
 				valueToBecombared, isWhereExist, isStarExist);
 	}
@@ -306,7 +330,7 @@ public class HandelParsing {
 			coloumnInCondition = data[0];
 			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
+			
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -328,7 +352,8 @@ public class HandelParsing {
 		if (!isStarExist) {
 			coloumnsName = new ArrayList<>();
 			String[] splitedColumnsNames;
-			String subColumnsNames = processedSQLCommand.substring(processedSQLCommand.indexOf("select") + 7,
+			String subColumnsNames;
+			subColumnsNames = processedSQLCommand.substring(processedSQLCommand.indexOf(" ") + 1,
 					processedSQLCommand.indexOf("from") - 1);
 			if(subColumnsNames.contains(",")){
 					splitedColumnsNames = subColumnsNames.split(",");
@@ -352,7 +377,7 @@ public class HandelParsing {
 			coloumnInCondition = data[0];
 			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-			System.out.println(valueToBecombared + " "+operator +" "+coloumnInCondition);
+
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -360,7 +385,7 @@ public class HandelParsing {
 			tableName = processedSQLCommand.substring(processedSQLCommand.indexOf("from") + 5,
 					processedSQLCommand.length());
 		}
-		System.out.println();
+	
 		Table tableToBeReturned = sqlOperations.select(tableName, coloumnInCondition, operator, valueToBecombared,
 				coloumnsName, isWhereExist, isStarExist);
 

@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs55.sqlInJava;
+package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.util.ArrayList;
 import java.util.HashMap;

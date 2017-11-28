@@ -1,10 +1,10 @@
-package eg.edu.alexu.csd.oop.db;
+package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.io.File;
 import java.sql.SQLException;
 
-import eg.edu.alexu.csd.oop.db.cs55.sqlInJava.HandelParsing;
-import eg.edu.alexu.csd.oop.db.cs55.sqlInJava.Table;
+import eg.edu.alexu.csd.oop.db.Database;
+
 
 
 public class DataBaseAdapter implements Database {
@@ -30,16 +30,15 @@ public class DataBaseAdapter implements Database {
 
 	@Override
 	public Object[][] executeQuery(String query) throws SQLException {
-	handelparsing.setSQLCommand(query);
-	Table table = handelparsing.returnSelectedTable();
+		handelparsing.setSQLCommand(query);
+		Table table = handelparsing.returnSelectedTable();
 	
 	return table.convertTableTo2Darray();
 	}
 
 	@Override
-	public int executeUpdateQuery(String query) throws SQLException {
-		handelparsing.setSQLCommand(query);		
-		return 0;
+	public int executeUpdateQuery(String query) throws SQLException {	
+		return handelparsing.setSQLCommand(query);
 	}
 
 }

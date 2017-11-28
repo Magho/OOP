@@ -19,13 +19,15 @@ public class InsertValidator extends Validation{
 		processedSqlCommand = removeUnusedSpaces(processedSqlCommand);
 		String regex = "insert\\sinto\\s([a-z][a-z0-9_-]*)\\s(?:\\((.*)\\))?\\s*values\\s(\\((.*)(,)?\\))*";
 		valid = processedSqlCommand.matches(regex);
-		Pattern re = Pattern.compile("((?<=(insert\\sinto\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()([\\w\\d_,]+)+(?=\\)))", Pattern.CASE_INSENSITIVE);
+		String regex2 = "((?<=(INSERT\\sINTO\\s))[\\w\\d_]+(?=\\s+))|((?<=\\()(\\s*[\\w\\d_,'?\"?]+\\s*)+(?=\\)))";
+		Pattern re = Pattern.compile(regex2, Pattern.CASE_INSENSITIVE);
 		Matcher m = re.matcher(processedSqlCommand);
-		while (m.find() && flag != 1) {
-           variable = m.group(0);
-            flag = 1;
+	/*	while (m.find() && flag ==0) {
+			variable = m.group(0);
+			flag = 1;
 		}
-		valid = valid && checkVariable(variable);
+	//	flag = 0;
+		valid = valid && checkVariable(variable);*/
 		String reg = ".+([(]([\"\']?[a-z0-9]+[\"\']?,?)*[)]).*";
 		String val = processedSqlCommand.replaceAll(reg, "$1");
 		val = val.substring(1,val.length()-1);
@@ -33,15 +35,16 @@ public class InsertValidator extends Validation{
 			if((str.contains("\"")||str.contains("\'"))){
 				valid = valid && (str.charAt(str.length()-1)==str.charAt(0));
 			} else {
-				valid = valid && !val.matches("[a-z]+");
+				valid = valid && !val.matches("[a-z0-9]+");
 			}
 		}
-		System.out.println(valid);
+	
 		if(valid){
 			setSql(processedSqlCommand.toLowerCase());
 		}else{
 			setSql(null);
 		}
+		
 		return valid;
 	}
 

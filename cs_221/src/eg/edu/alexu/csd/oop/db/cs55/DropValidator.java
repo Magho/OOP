@@ -11,7 +11,7 @@ public class DropValidator extends Validation {
 		sql = sql.toLowerCase();
 		String regex = "(drop\\stable\\s|drop\\sdatabase\\s){1}[a-z][a-z0-9]+.*";
 		valid = sql.matches(regex);
-		System.out.println(sql);
+	
 		if(sql.contains(";")){
 			sql = sql.substring(0,sql.length()-1);
 		}

@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs55.sqlInJava;
+package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,13 +62,13 @@ public class Table implements IComponent {
 		for (int i = 0; i < this.rows.size(); i++) {
 			int j =0;
 			for (String value : this.coloumn.keySet()) {
-				System.out.println(value + " returned size");
+				
 				String str = this.coloumn.get(value);
 				if (str.compareToIgnoreCase("varchar") == 0){
-					System.out.println(this.rows.get(i).coloumn.get(value) + " returned size");
+				
 					object[i][j] = this.rows.get(i).coloumn.get(value);
 				} else {
-					System.out.println(this.rows.get(i).coloumn.get(value) + " returned size");
+					
 					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(value));
 				}
 				j++;

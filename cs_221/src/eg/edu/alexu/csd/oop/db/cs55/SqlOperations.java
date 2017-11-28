@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs55.sqlInJava;
+package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -46,7 +46,7 @@ public class SqlOperations {
 		database.setName(DataBaseName);
 		sql.DataBases.add(database);
 		currentDatabase = DataBaseName;// setting name to current database
-		System.out.println(DataBaseName + "");
+		
 		handelXml.create_database_toXML(database.getName());
 	}
 
@@ -60,7 +60,7 @@ public class SqlOperations {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
-				System.out.println(currentDatabase);
+				
 				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn);
 			} else {
 				Handel_Database_Is_Not_Exists();
@@ -86,7 +86,7 @@ public class SqlOperations {
 
 	private boolean Check_If_table_Is_Already_Exists(String TableName, DataBase database) {
 		boolean tableexistsBefore = false;
-		System.out.println(database.tables + " " + database.getName());
+	
 		for (int i = 0; i < database.tables.size(); i++) {
 			if (database.tables.get(i).getName().equals(TableName)) {
 				tableexistsBefore = true;
@@ -101,8 +101,8 @@ public class SqlOperations {
 		table.setName(TableName);
 		table.addColoumns(coloumn);
 		get_Current_Database().tables.add(table);
-		System.out.println(table.getName() + ">>>" + TableName);
-		System.out.println(get_Current_Database().tables);
+		
+		
 		handelXml.create_table_toXML(database.getName(), TableName);
 		handelXml.createDtdFile(database.DataBaseName,table);
 	}
@@ -128,13 +128,13 @@ public class SqlOperations {
 	}
 
 	public void drop_database(String DataBaseName) throws SQLException {
-		System.out.println("from drop_data" + currentDatabase);
+		
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
-			System.out.println(currentDatabase);
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				DataBase database = get_Current_Database();
+				System.out.println("s"+database.getName());
 				Handel_Drop_Database_If_Already_Exist(database);
 			} else {
 				Handel_Database_Is_Not_Exists();
@@ -200,7 +200,7 @@ public class SqlOperations {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				DataBase database = get_Current_Database();
 				if (Check_If_table_Is_Already_Exists(TableName, database)) {
-					System.out.println("in");
+					
 					Handel_Insert_If_Table_Exists(TableName, database, ColoumnName, coloumnsValues);
 				} else {
 					Handel_Table_If_Not_Exists();
@@ -231,14 +231,13 @@ public class SqlOperations {
 	public int update(ArrayList<String> coloumsnName, ArrayList<String> coloumsnValues, String tableName,
 			String coloumnInCondition, String operator, String valueTobeCombared, boolean isWhereExist,
 			boolean isStarExist) throws SQLException {
-
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 			return 0;
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				return Handel_Update_If_Database_Is_Already_exists(coloumsnName, coloumsnValues, tableName, coloumnInCondition,
-						operator, valueTobeCombared, isWhereExist);
+						operator, valueTobeCombared, isWhereExist,isStarExist);
 			} else {
 				Handel_Database_Is_Not_Exists();
 				return 0;
@@ -248,11 +247,11 @@ public class SqlOperations {
 
 	public int Handel_Update_If_Database_Is_Already_exists(ArrayList<String> coloumsnName,
 			ArrayList<String> coloumsnValues, String TableName, String coloumnInCondition, String operator,
-			String valueTobeCombared, boolean isWhereExist) throws SQLException {
+			String valueTobeCombared, boolean isWhereExist,boolean isStarExist) throws SQLException {
 		DataBase database = get_Current_Database();
 		if (Check_If_table_Is_Already_Exists(TableName, database)) {
 			return Handel_Update_Table_If_Exists(coloumsnName, coloumsnValues, TableName, database, coloumnInCondition,
-					operator, valueTobeCombared, isWhereExist);
+					operator, valueTobeCombared, isWhereExist, isStarExist);
 		} else {
 			Handel_Update_If_Table_Not_Exists();
 			return 0;
@@ -261,20 +260,20 @@ public class SqlOperations {
 
 	public int Handel_Update_Table_If_Exists(ArrayList<String> coloumsnName, ArrayList<String> coloumsnValues,
 			String TableName, DataBase database, String coloumnInCondition, String operator, String valueTobeCombared,
-			boolean isWhereExist) throws SQLException {
+			boolean isWhereExist,boolean isStarExist) throws SQLException {
 		int count = 0;
 		handelXml.create_table_toXML(database.getName(), TableName + "Temp");
 		count = handelXml.update_toXML(coloumsnName, coloumsnValues, TableName, database, coloumnInCondition, operator,
-				valueTobeCombared, isWhereExist);
+				valueTobeCombared, isWhereExist, isStarExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + "Temp.XmL");
-		file.renameTo(new File("databases"+ System.getProperty("file.separator")  +database.getName() + System.getProperty("file.separator") +TableName + ".XmL"));
+		File file = new File("Database/" + database.getName() + "/" + TableName + "Temp.XmL");
+		file.renameTo(new File("Database/" +database.getName() + "/" + TableName + ".XmL"));
 		return count;
 	}
 
 	public int processTablePart(ArrayList<String> coloumsnName, ArrayList<String> coloumsnValues, Table table,
 			DataBase database, String coloumnInCondition, String operator, String valueTobeCombared,
-			boolean isWhereExist) throws SQLException {
+			boolean isWhereExist,boolean isStarExist) throws SQLException {
 		int count = 0 ;
 		for (int i = 0; i < table.rows.size(); i++) {
 			if (isWhereExist) {
@@ -342,10 +341,11 @@ public class SqlOperations {
 				}
 			} else {
 				// no where condition
-				table.rows.get(i).updateRow(coloumnInCondition, valueTobeCombared);
-				count++;
+				for (int k = 0 ; k < coloumsnName.size() ; k++){
+					table.rows.get(i).updateRow(coloumsnName.get(k), coloumsnValues.get(k));
+					count++;	
+				}
 			}
-
 		}
 		handelXml.insert_toXML(database.getName(), table);
 		return count;
@@ -394,9 +394,9 @@ public class SqlOperations {
 		count = handelXml.deleteFromXml(TableName, database, coloumnInCondition, operator, valueTobeCombared, isWhereExist,
 				isStarExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") +TableName + "Temp.XmL");
+		File file = new File("Database/" + database.getName() + "/" + TableName + "Temp.XmL");
 		
-		file.renameTo(new File("databases"+ System.getProperty("file.separator")  + database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
+		file.renameTo(new File("Database/" + database.getName() + "/" + TableName + ".XmL"));
 		return count;
 	}
 
@@ -527,7 +527,7 @@ public class SqlOperations {
 			newTable.addColoumns(tableToBeSelected.returnSelectedColoumns(ColoumnsNames));
 		}
 		if(table.rows.size() != 0){
-			System.out.println(table.rows.size() + " size");
+			
 
 			for (int i = 0; i < table.rows.size(); i++) {
 				if (isStarExist) {
