@@ -18,6 +18,7 @@ public class DataBaseAdapter implements Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		databaseName = databaseName.toLowerCase();
 		File fp = new File("databases/" + databaseName + "/");
 		return fp.getPath();
 	}
