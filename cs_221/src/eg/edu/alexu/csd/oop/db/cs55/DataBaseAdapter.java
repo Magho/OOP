@@ -19,7 +19,7 @@ public class DataBaseAdapter implements Database {
 			e.printStackTrace();
 		}
 		databaseName = databaseName.toLowerCase();
-		File fp = new File("Database/" + databaseName + "/");
+		File fp = new File("databases/" + databaseName + "/");
 		return fp.getPath();
 	}
 
