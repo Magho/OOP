@@ -20,7 +20,7 @@ public class DataBaseAdapter implements Database {
 		}
 		databaseName = databaseName.toLowerCase();
 		File fp = new File("databases/" + databaseName + "/");
-		return fp.getPath();
+		return fp.getAbsolutePath();
 	}
 
 	@Override
