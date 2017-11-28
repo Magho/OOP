@@ -66,7 +66,7 @@ public class HandelXml {
 		try {
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLEventReader eventReader = factory
-					.createXMLEventReader(new FileReader(System.getProperty("user.dir") + "\\" + "databases/" + database.getName() + "/" + TableName + ".XmL"));
+					.createXMLEventReader(new FileReader(System.getProperty("user.dir") + "\\" + "Database/" + database.getName() + "/" + TableName + ".XmL"));
 
 			int counter = 0;
 			while (eventReader.hasNext()) {
