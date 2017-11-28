@@ -282,11 +282,9 @@ public class SqlOperations {
 						if (table.rows.get(i).coloumn.get(coloumnInCondition)
 								.compareToIgnoreCase(valueTobeCombared) == 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
-
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
-
+							count++;
 						}
 					} else {
 						handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
@@ -298,24 +296,24 @@ public class SqlOperations {
 								.compareToIgnoreCase(valueTobeCombared) == 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
+							count++;
 						}
 					} else if (operator.equals(">")) {
 						if (table.rows.get(i).coloumn.get(coloumnInCondition)
 								.compareToIgnoreCase(valueTobeCombared) < 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
+							count++;
 						}
 					} else if (operator.equals("<")) {
 						if (table.rows.get(i).coloumn.get(coloumnInCondition)
 								.compareToIgnoreCase(valueTobeCombared) > 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
+							count++;
 						}
 					} else if (operator.equals("<=")) {
 						if (table.rows.get(i).coloumn.get(coloumnInCondition)
@@ -324,8 +322,8 @@ public class SqlOperations {
 										.compareToIgnoreCase(valueTobeCombared) < 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
+							count++;
 						}
 					} else if (operator.equals(">=")) {
 						if (table.rows.get(i).coloumn.get(coloumnInCondition)
@@ -334,8 +332,8 @@ public class SqlOperations {
 										.compareToIgnoreCase(valueTobeCombared) > 0) {
 							for (int j = 0; j < coloumsnName.size(); j++) {
 								table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
-								count++;
 							}
+							count++;
 						}
 					}
 				}
@@ -343,9 +341,8 @@ public class SqlOperations {
 				// no where condition
 				for (int k = 0 ; k < coloumsnName.size() ; k++){
 					table.rows.get(i).updateRow(coloumsnName.get(k), coloumsnValues.get(k));
-					count++;	
 				}
-				count = count / coloumsnName.size();
+				count++;	
 			}
 		}
 		handelXml.insert_toXML(database.getName(), table);
