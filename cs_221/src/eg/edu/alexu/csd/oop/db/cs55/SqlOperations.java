@@ -345,6 +345,7 @@ public class SqlOperations {
 					table.rows.get(i).updateRow(coloumsnName.get(k), coloumsnValues.get(k));
 					count++;	
 				}
+				count = count / coloumsnName.size();
 			}
 		}
 		handelXml.insert_toXML(database.getName(), table);
