@@ -24,8 +24,12 @@ public class DataBaseAdapter implements Database {
 	}
 
 	@Override
-	public boolean executeStructureQuery(String query) throws SQLException {
-		handelparsing.setSQLCommand(query);
+	public boolean executeStructureQuery(String query){
+		try {
+			handelparsing.setSQLCommand(query);
+		} catch (SQLException e) {
+			return false;
+		}
 		return true;
 	}
 
