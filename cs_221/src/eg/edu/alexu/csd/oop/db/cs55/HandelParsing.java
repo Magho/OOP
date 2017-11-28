@@ -67,7 +67,7 @@ public class HandelParsing {
 				sqlOperations.drop_database(dataBaseName);
 				sqlOperations.create_database(dataBaseName);
 			} else {
-				this.currentDatabase = dataBaseName;
+				this.currentDatabase = dataBaseName.toLowerCase();
 			}
 		} else {
 			sqlOperations.create_database(dataBaseName);
