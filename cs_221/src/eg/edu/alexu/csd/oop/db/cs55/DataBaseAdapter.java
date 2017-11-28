@@ -39,8 +39,7 @@ public class DataBaseAdapter implements Database {
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {	
-		handelparsing.setSQLCommand(query);
-		return 2;
+		return handelparsing.setSQLCommand(query);
 	}
 
 }
