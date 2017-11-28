@@ -292,6 +292,13 @@ public class HandelParsing {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
 		}	
+		
+		for (int i = 0 ; i < coloumnsValues.size() ; i++){
+			if (coloumnsValues.get(i).contains("\"")) {
+				coloumnsValues.add(coloumnsValues.get(i).substring(1,coloumnsValues.get(i).length()-1));
+				coloumnsValues.remove(i);
+			}
+		}
 		return sqlOperations.update(coloumnsNames, coloumnsValues, tableName, coloumnInCondition, operator,
 				valueToBecombared, isWhereExist, isStarExist);
 	}
