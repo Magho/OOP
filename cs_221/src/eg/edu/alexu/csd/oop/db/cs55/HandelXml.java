@@ -137,8 +137,9 @@ public class HandelXml {
 	}
 
 	public void create_database_toXML(String databaseName) {
-		File dir = new File(System.getProperty("user.dir") + File.separator+ "Databases" +File.separator+ databaseName);
-		dir.mkdirs();
+		File dir = new File("Databases" +File.separator+ databaseName);
+		new File(dir.getAbsolutePath()).mkdirs();
+		//dir.mkdirs();
 	}
 
 	public void create_table_toXML(String databaseName, String tableName) {

@@ -19,11 +19,8 @@ public class DataBaseAdapter implements Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		//File fp =  File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
-		/*if(true){
-			throw new RuntimeException(databaseName);
-		}*/
-		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
+		
+		return new File("Databases" + File.separator + databaseName).getAbsolutePath();
 	}
 
 	@Override
