@@ -13,19 +13,23 @@ public class DataBaseAdapter implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
+		databaseName = databaseName.toLowerCase();
 		try {
 			handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		databaseName = databaseName.toLowerCase();
-		File fp = new File("databases/" + databaseName + "/");
-		return fp.getPath();
+		File fp = new File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
+		return fp.getAbsolutePath();
 	}
 
 	@Override
-	public boolean executeStructureQuery(String query) throws SQLException{
+	public boolean executeStructureQuery(String query) throws SQLException {
+//		try {
 			handelparsing.setSQLCommand(query);
+//		} catch (SQLException e) {
+//			return false;
+//		}
 		return true;
 	}
 

@@ -1,8 +1,8 @@
 package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Row implements IComponent {
 
@@ -20,7 +20,7 @@ public class Row implements IComponent {
 	}
 
 	private void create() {
-		coloumn = new HashMap<String, String>();
+		coloumn = new TreeMap<String, String>();
 		for (int i = 0; i < coloumnName.size(); i++) {
 			coloumn.put(coloumnName.get(i), ColoumnValue.get(i));
 		}

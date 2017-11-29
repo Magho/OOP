@@ -2,8 +2,8 @@ package eg.edu.alexu.csd.oop.db.cs55;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,7 +67,7 @@ public class HandelParsing {
 				sqlOperations.drop_database(dataBaseName);
 				sqlOperations.create_database(dataBaseName);
 			} else {
-				this.currentDatabase = dataBaseName.toLowerCase();
+				this.currentDatabase = dataBaseName;
 			}
 		} else {
 			sqlOperations.create_database(dataBaseName);
@@ -132,7 +132,7 @@ public class HandelParsing {
 		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
 
 		SetCurrentDatabaseName(DataBaseName, true);
-		sqlOperations.create_database(DataBaseName);
+		//sqlOperations.create_database(DataBaseName);
 	}
 
 	public void get_create_table_info() throws SQLException {
@@ -141,7 +141,7 @@ public class HandelParsing {
 
 		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = null;
-		Map<String, String> coloumn = new HashMap<>();
+		Map<String, String> coloumn = new TreeMap<>();
 		String regex = "((?<=(create\\stable\\s))[\\w\\d_]+(?=\\s+))";
 		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = re.matcher(processedSQLCommand);
@@ -241,7 +241,6 @@ public class HandelParsing {
 		
 		return coloumnsValues.size();
 	}
-
 
 	public int get_update_info() throws SQLException {
 		String processedSQLCommand = new String();
@@ -349,7 +348,7 @@ public class HandelParsing {
 	public Table get_select_info() throws SQLException {
 		String processedSQLCommand = new String();
 		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
-		ArrayList<String> coloumnsName = null;
+		ArrayList<String> coloumnsName = new ArrayList<String>();
 		boolean isStarExist = processedSQLCommand.toLowerCase().contains("*");
 		boolean isWhereExist = processedSQLCommand.toLowerCase().contains("where");
 		String tableName = "";
