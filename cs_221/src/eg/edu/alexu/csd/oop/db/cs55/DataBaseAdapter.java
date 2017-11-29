@@ -20,11 +20,15 @@ public class DataBaseAdapter implements Database {
 			e.printStackTrace();
 		}
 		File fp = new File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
+		if(true){
+			throw new RuntimeException(fp.getAbsolutePath());
+		}
 		return fp.getAbsolutePath();
 	}
 
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
+		
 //		try {
 			handelparsing.setSQLCommand(query);
 //		} catch (SQLException e) {
