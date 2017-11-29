@@ -13,6 +13,9 @@ public class DataBaseAdapter implements Database {
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
+		
+	
+		
 		databaseName = databaseName.toLowerCase();
 		try {
 			handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
@@ -29,12 +32,13 @@ public class DataBaseAdapter implements Database {
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
 		
-//		try {
-			handelparsing.setSQLCommand(query);
-//		} catch (SQLException e) {
-//			return false;
-//		}
-		return true;
+		throw new RuntimeException(query);
+////		try {
+//			handelparsing.setSQLCommand(query);
+////		} catch (SQLException e) {
+////			return false;
+////		}
+//		return true;
 	}
 
 	@Override
