@@ -1,0 +1,6 @@
+<!DOCTYPE table [
+<!ELEMENT table (row+)>
+<!ELEMENT row (id,name)>
+<!ELEMENT id (#int)>
+<!ELEMENT name (#varchar)>
+]>
