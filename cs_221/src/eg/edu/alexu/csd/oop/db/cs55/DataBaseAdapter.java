@@ -21,7 +21,7 @@ public class DataBaseAdapter implements Database {
 		}
 		File fp = new File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
 		if(true){
-			throw new RuntimeException(fp.getAbsolutePath());
+			throw new RuntimeException(databaseName);
 		}
 		return fp.getAbsolutePath();
 	}
