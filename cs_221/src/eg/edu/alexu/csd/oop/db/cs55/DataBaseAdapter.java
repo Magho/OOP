@@ -15,30 +15,30 @@ public class DataBaseAdapter implements Database {
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		
 	
-		
-		databaseName = databaseName.toLowerCase();
-		try {
-			handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		//File fp =  File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
-		/*if(true){
-			throw new RuntimeException(databaseName);
-		}*/
-		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
+		throw new RuntimeException(databaseName);
+//		databaseName = databaseName.toLowerCase();
+//		try {
+//			handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		//File fp =  File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
+//		/*if(true){
+//			throw new RuntimeException(databaseName);
+//		}*/
+//		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
 	}
 
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
 		
-		throw new RuntimeException(query);
-////		try {
-//			handelparsing.setSQLCommand(query);
-////		} catch (SQLException e) {
-////			return false;
-////		}
-//		return true;
+		
+//		try {
+			handelparsing.setSQLCommand(query);
+//		} catch (SQLException e) {
+//			return false;
+//		}
+		return true;
 	}
 
 	@Override
