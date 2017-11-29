@@ -20,7 +20,7 @@ public class DataBaseAdapter implements Database {
 			e.printStackTrace();
 		}
 		
-		return new File("Databases" + File.separator + databaseName).getAbsolutePath();
+		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
 	}
 
 	@Override
