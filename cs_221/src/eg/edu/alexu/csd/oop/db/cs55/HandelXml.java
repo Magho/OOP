@@ -176,19 +176,22 @@ public class HandelXml {
 
 	public void drop_database_toXML(String databaseName) {
 		File db = new File (System.getProperty("user.dir") + File.separator+ "Databases" +File.separator+ databaseName );
-		String[] entries = db.list();
-		// System.out.println(databaseName);
-		if (entries != null) {
-			for (String s : entries) {
-				
-				File currentFile = new File(db.getPath(), s);
-				currentFile.delete();
-			}
-		}
-		System.out.println("end");
-		db.delete();
+		deleteDir(db);
+		
 	}
-
+	private void deleteDir(File dir) {
+    	File[] files = dir.listFiles();
+        if(files!=null) {
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    deleteDir(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        dir.delete();
+	}
 	public void drop_table_toXML(String databaseName, String tableName) {
 		File tableFileXmL = new File(System.getProperty("user.dir") + File.separator+ "Databases" +File.separator+ databaseName + File.separator + tableName + ".XmL");
 		tableFileXmL.delete();
