@@ -20,9 +20,9 @@ public class DataBaseAdapter implements Database {
 			e.printStackTrace();
 		}
 		File fp = new File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
-		if(true){
+		/*if(true){
 			throw new RuntimeException(databaseName);
-		}
+		}*/
 		return fp.getAbsolutePath();
 	}
 
