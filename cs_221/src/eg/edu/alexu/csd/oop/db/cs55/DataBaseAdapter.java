@@ -22,16 +22,6 @@ public class DataBaseAdapter implements Database {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 		}
-		// try {
-		// handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
-		// } catch (SQLException e) {
-		// e.printStackTrace();
-		// }
-		// //File fp = File(System.getProperty("user.dir") + File.separator +
-		// "Databases" + File.separator + databaseName);
-		// /*if(true){
-		// throw new RuntimeException(databaseName);
-		// }*/
 		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
 	}
 
