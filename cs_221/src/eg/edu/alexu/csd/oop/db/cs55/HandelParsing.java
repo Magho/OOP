@@ -60,6 +60,7 @@ public class HandelParsing {
 	}
 
 	public void SetCurrentDatabaseName(String dataBaseName, boolean dropIfExists) throws SQLException {
+		
 		currentDatabase = dataBaseName;
 		sqlOperations.setCurrentDatabase(dataBaseName);
 		if (sqlOperations.check_If_Database_Is_Already_exists(dataBaseName)) {
@@ -73,7 +74,6 @@ public class HandelParsing {
 			sqlOperations.create_database(dataBaseName);
 			this.currentDatabase = dataBaseName;
 		}
-
 	}
 
 	// get validated command
@@ -131,7 +131,7 @@ public class HandelParsing {
 		int indexOfDataBaseName = create_database_Matcher.end() + 1;
 		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
 
-		SetCurrentDatabaseName(DataBaseName, true);
+		SetCurrentDatabaseName(DataBaseName, false);
 		//sqlOperations.create_database(DataBaseName);
 	}
 

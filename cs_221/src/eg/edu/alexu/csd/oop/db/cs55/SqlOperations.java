@@ -26,9 +26,6 @@ public class SqlOperations {
 		DataBase database = new DataBase();
 		if (!check_If_Database_Is_Already_exists(DataBaseName)) {
 			Handel_Create_Database_If_Not_Exists_Before(database, DataBaseName);
-		} else {
-			Handel_Create_Database_If_Exists_Before();
-			currentDatabase = DataBaseName;
 		}
 	}
 
