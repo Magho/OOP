@@ -11,11 +11,8 @@ public class MYMAIN {
 		Database db = new DataBaseAdapter();
 		
 		/**bugs**/
-		//call the second in the first
-		// when to return false 
-		//when to throw exception
-		// insert without coloumns names 	  --done--
-		//select all                          --done
+		// insert without coloumns names --done--
+		//select all                          
 		//insert with no coloumns             --done--
 		//catch exception and return false    --done--
 		/**bugs**/
@@ -28,8 +25,8 @@ public class MYMAIN {
 //		db.executeUpdateQuery("INSERT INTO table_name1(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)");
 //		db.executeUpdateQuery("DROP TABLE table_name1");
 		
-		String path = db.createDatabase("sample" + System.getProperty("file.separator") + "ffff", false);
-		System.out.println(path);
+		
+		
 		/** Scenario 2**/
 		
 		
@@ -59,8 +56,8 @@ public class MYMAIN {
 	 	Object[][] test = db.executeQuery("SELECT * from ts where id = 2");
 		System.out.println(test.length);
 		*/
-		System.out.println(db.createDatabase("testingMuhammed", false));
-		db.executeStructureQuery("create table table1(id int,name varchar)");
+		db.createDatabase("testingMuhammed", false);
+		//db.executeStructureQuery("create table table1(id int,name varchar)");
 		//db.executeStructureQuery("drop table table1");
 		db.executeUpdateQuery("insert into table1 (id, name) values(4,'muhammed')");
 		db.executeUpdateQuery("insert into table1 (id, name) values(4,'muhammed')");
@@ -68,7 +65,7 @@ public class MYMAIN {
 		db.executeUpdateQuery("insert into table1 values(4,'musdsdgsdghammed')");
 		db.executeUpdateQuery("update table1 set id=4,name='magho' where name='muhammed' ");
 
-		//int num = db.executeUpdateQuery("update ts set Id = 4, NaMe = \"Magho\"");
+		int num = db.executeUpdateQuery("delete from table1 where id = 4;");
 		//System.out.println(num);
 //
 //		int num = db.executeUpdateQuery("insert into table1 (id, name) values (2, \"sajed\")");

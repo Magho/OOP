@@ -5,49 +5,45 @@ import java.sql.SQLException;
 
 import eg.edu.alexu.csd.oop.db.Database;
 
-public class DataBaseAdapter implements Database {
 
+
+public class DataBaseAdapter implements Database {
+	
 	HandelParsing handelparsing = new HandelParsing();
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		databaseName = databaseName.toLowerCase();
 		try {
-			if (dropIfExists) {
-				executeStructureQuery("drop database " + databaseName);
-				executeStructureQuery("create database " + databaseName);
-			} else {
-				executeStructureQuery("create database " + databaseName);				
-			}
+			handelparsing.SetCurrentDatabaseName(databaseName, dropIfExists);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName;
+		File fp = new File(System.getProperty("user.dir") + File.separator + "Databases" + File.separator + databaseName);
+		return fp.getAbsolutePath();
 	}
 
 	@Override
 	public boolean executeStructureQuery(String query) throws SQLException {
-
-		try {
+		
+//		try {
 			handelparsing.setSQLCommand(query);
-		} catch (SQLException e) {
-			if (e.getMessage().equals("database doesn't exist")) {
-				throw e;
-			}
-			return false;
-		}
+//		} catch (SQLException e) {
+//			return false;
+//		}
 		return true;
 	}
 
 	@Override
-	public Object[][] executeQuery(String query) throws SQLException {	
+	public Object[][] executeQuery(String query) throws SQLException {
 		handelparsing.setSQLCommand(query);
 		Table table = handelparsing.returnSelectedTable();
-		return table.convertTableTo2Darray();
+	
+	return table.convertTableTo2Darray();
 	}
 
 	@Override
-	public int executeUpdateQuery(String query) throws SQLException {
+	public int executeUpdateQuery(String query) throws SQLException {	
 		return handelparsing.setSQLCommand(query);
 	}
 

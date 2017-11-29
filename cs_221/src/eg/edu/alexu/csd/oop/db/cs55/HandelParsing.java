@@ -60,6 +60,7 @@ public class HandelParsing {
 	}
 
 	public void SetCurrentDatabaseName(String dataBaseName, boolean dropIfExists) throws SQLException {
+		
 		currentDatabase = dataBaseName;
 		sqlOperations.setCurrentDatabase(dataBaseName);
 		if (sqlOperations.check_If_Database_Is_Already_exists(dataBaseName)) {
