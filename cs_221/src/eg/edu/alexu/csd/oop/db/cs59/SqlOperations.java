@@ -234,14 +234,14 @@ public class SqlOperations {
 			boolean isStarExist) throws SQLException {
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
-			return 0;
+			return 12;
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				return Handel_Update_If_Database_Is_Already_exists(coloumsnName, coloumsnValues, tableName,
 						coloumnInCondition, operator, valueTobeCombared, isWhereExist, isStarExist);
 			} else {
 				Handel_Database_Is_Not_Exists();
-				return 0;
+				return 12;
 			}
 		}
 	}
@@ -255,7 +255,7 @@ public class SqlOperations {
 					operator, valueTobeCombared, isWhereExist, isStarExist);
 		} else {
 			Handel_Update_If_Table_Not_Exists();
-			return 0;
+			return 12;
 		}
 	}
 
@@ -395,14 +395,14 @@ public class SqlOperations {
 			boolean isWhereExist, boolean isStarExist) throws SQLException {
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
-			return 0;
+			return 12;
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				return Handel_Delete_If_Database_Is_Already_exists(tableName, coloumnInCondition, operator,
 						valueTobeCombared, isWhereExist, isStarExist);
 			} else {
 				Handel_Database_Is_Not_Exists();
-				return 0;
+				return 12;
 			}
 		}
 	}
@@ -415,7 +415,7 @@ public class SqlOperations {
 					isWhereExist, isStarExist);
 		} else {
 			Handel_Update_If_Table_Not_Exists();
-			return 0;
+			return 12;
 		}
 	}
 
