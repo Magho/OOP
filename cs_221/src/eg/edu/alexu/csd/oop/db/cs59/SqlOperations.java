@@ -304,7 +304,7 @@ public class SqlOperations {
 							}
 						} else if (operator.equals(">")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
+									.compareToIgnoreCase(valueTobeCombared) > 0) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
@@ -312,7 +312,7 @@ public class SqlOperations {
 							}
 						} else if (operator.equals("<")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
+									.compareToIgnoreCase(valueTobeCombared) < 0) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
@@ -462,14 +462,14 @@ public class SqlOperations {
 							}
 						} else if (operator.equals(">")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
+									.compareToIgnoreCase(valueTobeCombared) > 0) {
 								table.rows.remove(i);
 								i--;
 								count++;
 							}
 						} else if (operator.equals("<")) {
 							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
+									.compareToIgnoreCase(valueTobeCombared) < 0) {
 								table.rows.remove(i);
 								i--;
 								count++;
@@ -578,14 +578,14 @@ public class SqlOperations {
 								}
 							} else if (operator.equals(">")) {
 								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) < 0) {
+										.compareToIgnoreCase(valueTobeCombared) > 0) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<")) {
 								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) > 0) {
+										.compareToIgnoreCase(valueTobeCombared) < 0) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
@@ -639,14 +639,14 @@ public class SqlOperations {
 								}
 							} else if (operator.equals(">")) {
 								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) < 0) {
+										.compareToIgnoreCase(valueTobeCombared) > 0) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<")) {
 								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) > 0) {
+										.compareToIgnoreCase(valueTobeCombared) < 0) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
