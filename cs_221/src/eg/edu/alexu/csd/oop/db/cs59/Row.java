@@ -21,6 +21,9 @@ public class Row implements IComponent {
 
 	private void create() {
 		coloumn = new TreeMap<String, String>();
+		while (ColoumnValue.size() < coloumnName.size()) {
+			ColoumnValue.add("null");
+		}
 		for (int i = 0; i < coloumnName.size(); i++) {
 			coloumn.put(coloumnName.get(i), ColoumnValue.get(i));
 		}
