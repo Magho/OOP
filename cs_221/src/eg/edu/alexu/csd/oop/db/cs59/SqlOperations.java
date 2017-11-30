@@ -340,30 +340,30 @@ public class SqlOperations {
 
 					// no where condition
 
-//					boolean wasAsWantToUpdate = false;
-//					Map<String, String> map = new TreeMap<String, String>();
-//					for (int l = 0; l < coloumsnName.size(); l++) {
-//						map.put(coloumsnName.get(l), coloumsnValues.get(l));
-//
-//					}
-//
-//					for (int j = 0; j < coloumsnName.size(); j++) {
-//						if (table.rows.get(i).coloumn.get(coloumsnName.get(j))
-//								.compareToIgnoreCase(map.get(coloumsnName.get(j))) == 0) {
-//							wasAsWantToUpdate = true;
-//						} else {
-//							wasAsWantToUpdate = false;
-//							break;
-//						}
-//					}
+					boolean wasAsWantToUpdate = false;
+					Map<String, String> map = new TreeMap<String, String>();
+					for (int l = 0; l < coloumsnName.size(); l++) {
+						map.put(coloumsnName.get(l), coloumsnValues.get(l));
+
+					}
+
+					for (int j = 0; j < coloumsnName.size(); j++) {
+						if (table.rows.get(i).coloumn.get(coloumsnName.get(j))
+								.compareToIgnoreCase(map.get(coloumsnName.get(j))) == 0) {
+							wasAsWantToUpdate = true;
+						} else {
+							wasAsWantToUpdate = false;
+							break;
+						}
+					}
 
 					for (int k = 0; k < coloumsnName.size(); k++) {
 						table.rows.get(i).updateRow(coloumsnName.get(k), coloumsnValues.get(k));
 					}
-					count ++;
-//					if (!wasAsWantToUpdate) {
-//						count++;
-//					}
+
+					if (!wasAsWantToUpdate) {
+						count++;
+					}
 				}
 			}
 		}
