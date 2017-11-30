@@ -95,26 +95,27 @@ public class HandelParsing {
 	private int determineOperation() throws SQLException {
 		if (create_database_Matcher.find()) {
 			get_create_database_info();
-			return 12;
+			return 0;
 		} else if (create_table_Matcher.find()) {
 			get_create_table_info();
-			return 12;
+			return 0;
 		} else if (drop_database_Matcher.find()) {
 			get_drop_database_info();
-			return 12;
+			return 0;
 		} else if (drop_table_Matcher.find()) {
 			get_drop_table_info();
-			return 12;
+			return 0;
 		} else if (insert_Matcher.find()) {
 			
-			return get_insert_info();
+			 get_insert_info();
+			 return 12;
 		} else if (update_Matcher.find()) {
 			return get_update_info();
 		} else if (delete_Matcher.find()) {
 			return get_delete_info();
 		} else if (select_Matcher.find()) {
 			table = get_select_info();
-			return 12;
+			return 0;
 		} else {}
 			throw new RuntimeException("Invalid query");// error unknown command
 		
