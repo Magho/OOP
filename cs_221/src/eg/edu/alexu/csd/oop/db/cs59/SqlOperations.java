@@ -438,6 +438,7 @@ public class SqlOperations {
 		int count = 0;
 		Table table = tableToBeDeleted;
 		if (isStarExist) {
+			count = tableToBeDeleted.rows.size();
 			handelXml.drop_table_toXML(database.getName(), tableToBeDeleted.getName());
 			handelXml.create_table_toXML(database.getName(), tableToBeDeleted.getName());
 
