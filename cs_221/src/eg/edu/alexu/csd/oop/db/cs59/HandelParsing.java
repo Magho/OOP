@@ -110,7 +110,8 @@ public class HandelParsing {
 			return get_insert_info();
 		} else if (update_Matcher.find()) {
 			
-			return get_update_info();
+			 get_update_info();
+			 return 12;
 		} else if (delete_Matcher.find()) {
 			return get_delete_info();
 		} else if (select_Matcher.find()) {
