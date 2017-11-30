@@ -27,7 +27,7 @@ public class UpdateValidation extends Validation{
 				val = val.substring(0, val.length());
 			}else{
 				val = val.substring(0, val.length());
-				valid = valid && val.matches("[^a-z0-9]+");
+				valid = valid && val.matches("[^a-z]+");
 			}
 		}
 		String reg1 = ".+set\\s.+[<>=][=]?\\s?(\"?'?[a-z0-9]+\"?'?)";
@@ -37,7 +37,7 @@ public class UpdateValidation extends Validation{
 			val = val.substring(0, val.length());
 		}else{
 			val = val.substring(0, val.length());
-			valid = valid && val.matches("[^a-z0-9]+");
+			valid = valid && val.matches("[^a-z]+");
 		}
 		if(valid){
 			setSql(processedSqlCommand.toLowerCase());
