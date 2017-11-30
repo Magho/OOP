@@ -206,7 +206,7 @@ public class HandelXml {
 
 		String path = System.getProperty("user.dir") + System.getProperty("file.separator") +"Databases"+ System.getProperty("file.separator") + databaseName + System.getProperty("file.separator") +newInsertedRaws.getName();
  
-     	InputStream inputStream;
+     	InputStream inputStream = null;
 		Reader reader = null;
 		try {
 			inputStream = new FileInputStream(path + ".XmL");
@@ -272,11 +272,18 @@ public class HandelXml {
 		}
         tr.setOutputProperty(OutputKeys.ENCODING, "ISO-8859-1");
         try {
-			tr.transform(new DOMSource(document), new StreamResult(new FileOutputStream(path + ".XmL")));
+        	FileOutputStream aa = new FileOutputStream(path + ".XmL");
+			tr.transform(new DOMSource(document), new StreamResult(aa));
+			reader.close();
+			inputStream.close();
+			aa.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
