@@ -131,7 +131,6 @@ public class SqlOperations {
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 				DataBase database = get_Current_Database();
-				System.out.println("s" + database.getName());
 				Handel_Drop_Database_If_Already_Exist(database);
 			} else {
 				Handel_Database_Is_Not_Exists();
@@ -353,8 +352,6 @@ public class SqlOperations {
 					}
 
 					for (int j = 0; j < coloumsnName.size(); j++) {
-						System.out.println(table.rows.get(i).coloumn.get(coloumsnName.get(j)));
-						System.out.println(map.get(coloumsnName.get(j)));
 						if (table.rows.get(i).coloumn.get(coloumsnName.get(j))
 								.compareToIgnoreCase(map.get(coloumsnName.get(j))) == 0) {
 							wasAsWantToUpdate = true;
@@ -368,14 +365,9 @@ public class SqlOperations {
 						table.rows.get(i).updateRow(coloumsnName.get(k), coloumsnValues.get(k));
 					}
 
-					// System.out.println(wasAsWantToUpdate + " here I print
-					// boolean" );
-
 					if (!wasAsWantToUpdate) {
 						count++;
 					}
-
-					// System.out.println(count + " here i print count");
 				}
 			}
 		}

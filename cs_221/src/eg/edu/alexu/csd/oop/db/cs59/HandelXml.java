@@ -177,7 +177,6 @@ public class HandelXml {
 	public void drop_database_toXML(String databaseName) {
 		File db = new File (System.getProperty("user.dir") + System.getProperty("file.separator")+ "Databases" +System.getProperty("file.separator")+ databaseName );
 		String[] entries = db.list();
-		// System.out.println(databaseName);
 		if (entries != null) {
 			for (String s : entries) {
 				
@@ -185,7 +184,6 @@ public class HandelXml {
 				currentFile.delete();
 			}
 		}
-		System.out.println("end");
 		db.delete();
 	}
 
@@ -375,7 +373,6 @@ public class HandelXml {
 
 				case XMLStreamConstants.CHARACTERS:
 					Characters characters = event.asCharacters();
-					// System.out.println(characters.getData());
 					values.add(characters.getData());
 					break;
 
