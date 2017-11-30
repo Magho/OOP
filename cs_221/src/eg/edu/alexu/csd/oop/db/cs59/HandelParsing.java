@@ -111,7 +111,7 @@ public class HandelParsing {
 		} else if (update_Matcher.find()) {
 			
 			 get_update_info();
-			 return 12;
+			 return 2;
 		} else if (delete_Matcher.find()) {
 			return get_delete_info();
 		} else if (select_Matcher.find()) {
