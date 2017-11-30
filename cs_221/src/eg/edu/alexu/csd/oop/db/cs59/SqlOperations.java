@@ -210,7 +210,7 @@ public class SqlOperations {
 	public void Handel_Insert_If_Table_Exists(String TableName, DataBase database, ArrayList<String> ColoumnName,
 			ArrayList<String[]> coloumnsValues) {
 		Table table = get_Current_Table(TableName, database);
-		if (ColoumnName.size() == 0){
+		if (ColoumnName.size() == 0) {
 			ColoumnName = table.getColoumnsNames();
 		}
 		Table newInsertedRaws = new Table();
@@ -266,8 +266,12 @@ public class SqlOperations {
 		count = handelXml.update_toXML(coloumsnName, coloumsnValues, TableName, database, coloumnInCondition, operator,
 				valueTobeCombared, isWhereExist, isStarExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"Databases" +System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator") + TableName + "Temp.XmL");
-		file.renameTo(new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"Databases" +System.getProperty("file.separator")+ database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
+		File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases"
+				+ System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator")
+				+ TableName + "Temp.XmL");
+		file.renameTo(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases"
+				+ System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator")
+				+ TableName + ".XmL"));
 		return count;
 	}
 
@@ -294,45 +298,37 @@ public class SqlOperations {
 						}
 					} else {
 						// as if not VARCHAR then INT as it is validated
+						int value = Integer.parseInt(valueTobeCombared);
 						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) == value) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
 								count++;
 							}
 						} else if (operator.equals(">")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) > value) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
 								count++;
 							}
 						} else if (operator.equals("<")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) < value) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
 								count++;
 							}
 						} else if (operator.equals("<=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) < 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) <= value) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
 								count++;
 							}
 						} else if (operator.equals(">=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) > 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) >= value) {
 								for (int j = 0; j < coloumsnName.size(); j++) {
 									table.rows.get(i).updateRow(coloumsnName.get(j), coloumsnValues.get(j));
 								}
@@ -418,9 +414,13 @@ public class SqlOperations {
 		count = handelXml.deleteFromXml(TableName, database, coloumnInCondition, operator, valueTobeCombared,
 				isWhereExist, isStarExist);
 		handelXml.drop_table_toXML(database.getName(), TableName);
-		File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"Databases"+System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator") + TableName + "Temp.XmL");
+		File file = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases"
+				+ System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator")
+				+ TableName + "Temp.XmL");
 
-		file.renameTo(new File(System.getProperty("user.dir") + System.getProperty("file.separator") +"Databases" +System.getProperty("file.separator")+ database.getName() + System.getProperty("file.separator") + TableName + ".XmL"));
+		file.renameTo(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases"
+				+ System.getProperty("file.separator") + database.getName() + System.getProperty("file.separator")
+				+ TableName + ".XmL"));
 		return count;
 	}
 
@@ -453,41 +453,33 @@ public class SqlOperations {
 						}
 					} else {
 						// as if not VARCHAR then INT as it is validated
+						int value = Integer.parseInt(valueTobeCombared);
 						if (operator.equals("=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) == value) {
 								table.rows.remove(i);
 								i--;
 								count++;
 							}
 						} else if (operator.equals(">")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) > 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) > value) {
 								table.rows.remove(i);
 								i--;
 								count++;
 							}
 						} else if (operator.equals("<")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) < 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) < value) {
 								table.rows.remove(i);
 								i--;
 								count++;
 							}
 						} else if (operator.equals("<=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) < 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) <= value) {
 								table.rows.remove(i);
 								i--;
 								count++;
 							}
 						} else if (operator.equals(">=")) {
-							if (table.rows.get(i).coloumn.get(coloumnInCondition)
-									.compareToIgnoreCase(valueTobeCombared) == 0
-									| table.rows.get(i).coloumn.get(coloumnInCondition)
-											.compareToIgnoreCase(valueTobeCombared) > 0) {
+							if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) >= value) {
 								table.rows.remove(i);
 								i--;
 								count++;
@@ -566,10 +558,11 @@ public class SqlOperations {
 								handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
 							}
 						} else {
+
+							int value = Integer.parseInt(valueTobeCombared);
 							// as if not VARCHAR then INT as it is validated
 							if (operator.equals("=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) == value) {
 
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
@@ -577,33 +570,25 @@ public class SqlOperations {
 
 								}
 							} else if (operator.equals(">")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) > 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) > value) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) < 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) < value) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0
-										| table.rows.get(i).coloumn.get(coloumnInCondition)
-												.compareToIgnoreCase(valueTobeCombared) < 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) <= value) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals(">=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0
-										| table.rows.get(i).coloumn.get(coloumnInCondition)
-												.compareToIgnoreCase(valueTobeCombared) > 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) >= value) {
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
@@ -629,42 +614,34 @@ public class SqlOperations {
 								handle_String_And_Comparing_With_Operator_Rather_Than_Equal_();
 							}
 						} else {
+							int value = Integer.parseInt(valueTobeCombared);
 							// as if not VARCHAR then INT as it is validated
 							if (operator.equals("=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) == value) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals(">")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) > 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) > value) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) < 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) < value) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals("<=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0
-										| table.rows.get(i).coloumn.get(coloumnInCondition)
-												.compareToIgnoreCase(valueTobeCombared) < 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) <= value) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
 								}
 							} else if (operator.equals(">=")) {
-								if (table.rows.get(i).coloumn.get(coloumnInCondition)
-										.compareToIgnoreCase(valueTobeCombared) == 0
-										| table.rows.get(i).coloumn.get(coloumnInCondition)
-												.compareToIgnoreCase(valueTobeCombared) > 0) {
+								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) >= value) {
 									Row row = new Row(ColoumnsNames,
 											table.rows.get(i).SelectSpecificColoumnsValuse(ColoumnsNames));
 									newTable.rows.add(row);
