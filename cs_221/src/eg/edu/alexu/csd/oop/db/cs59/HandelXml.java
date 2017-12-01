@@ -508,7 +508,6 @@ public class HandelXml {
 				table.coloumn = columns;
 				table.coloumnNamesInorder = coloumnsordernames;
 				table.setName(currentFile.getName().substring(0, currentFile.getName().length() - 4));
-				System.out.println(table.getName());
 				sql.DataBases.get(i).tables.add(table);
 			}
 		}
