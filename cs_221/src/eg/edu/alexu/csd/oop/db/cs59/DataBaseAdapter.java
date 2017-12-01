@@ -40,8 +40,8 @@ public class DataBaseAdapter implements Database {
 	public Object[][] executeQuery(String query) throws SQLException {
 		handelparsing.setSQLCommand(query);
 		Table table = handelparsing.returnSelectedTable();
-
-		return table.convertTableTo2Darray();
+		throw new RuntimeException(query + " here is th query ");
+		//return table.convertTableTo2Darray();
 	}
 
 	@Override

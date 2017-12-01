@@ -70,14 +70,14 @@ public class Table implements IComponent {
 		for (int i = 0; i < this.rows.size(); i++) {
 			for (int j = 0 ; j < coloumnNamesInorder.size() ; j++) {
 				String str = this.coloumn.get(coloumnNamesInorder.get(j));
-				System.out.println(coloumnNamesInorder.get(j));
-				System.out.println(str);
+//				System.out.println(coloumnNamesInorder.get(j));
+//				System.out.println(str);
 				if (str.compareToIgnoreCase("varchar") == 0) {
 					object[i][j] = this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j));
 				} else {
 					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j)));
 				}
-				System.out.println(object[i][j]);
+//				System.out.println(object[i][j]);
 			}
 		}
 		return object;
