@@ -68,18 +68,13 @@ public class Table implements IComponent {
 
 		Object[][] object = new Object[this.rows.size()][this.coloumn.size()];
 		for (int i = 0; i < this.rows.size(); i++) {
-			int j = 0;
-			for (String value : this.coloumn.keySet()) {
-
-				String str = this.coloumn.get(value);
+			for (int j = 0 ; j < coloumnNamesInorder.size() ; j++) {
+				String str = this.coloumn.get(coloumnNamesInorder.get(j));
 				if (str.compareToIgnoreCase("varchar") == 0) {
-
-					object[i][j] = this.rows.get(i).coloumn.get(value);
+					object[i][j] = this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j));
 				} else {
-
-					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(value));
+					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j)));
 				}
-				j++;
 			}
 		}
 		return object;
