@@ -212,6 +212,7 @@ public class SqlOperations {
 		}
 		Table newInsertedRaws = new Table();
 		newInsertedRaws.addColoumns(table.coloumn);
+		newInsertedRaws.coloumnNamesInorder = table.coloumnNamesInorder;
 		newInsertedRaws.setName(TableName);
 		for (int i = 0; i < coloumnsValues.size(); i++) {
 			ArrayList<String> coloumnvalues = new ArrayList<String>();
@@ -534,9 +535,11 @@ public class SqlOperations {
 		if (ColoumnsNames.size() == 0) {
 			ColoumnsNames = tableToBeSelected.getColoumnsNames();
 			newTable.addColoumns(table.coloumn);
+			newTable.coloumnNamesInorder = table.coloumnNamesInorder;
 
 		} else {
 			newTable.addColoumns(tableToBeSelected.returnSelectedColoumns(ColoumnsNames));
+			newTable.coloumnNamesInorder = tableToBeSelected.coloumnNamesInorder;
 		}
 		if (table.rows.size() != 0) {
 

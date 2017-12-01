@@ -53,6 +53,7 @@ public class HandelXml {
 	SQL sql;
 	String currentDatabase;
 	SqlOperations sqlOperations;
+	static ArrayList<String> coloumnsordernames;
 
 	public HandelXml(SQL sql, String currentDatabase, SqlOperations sqlOperations) {
 		this.sql = SQL.CreateSQL();
@@ -68,6 +69,7 @@ public class HandelXml {
 		tableRed.setName(TableName + "Temp");
 		Table dummytable;
 		tableRed.addColoumns(sqlOperations.get_Current_Table(TableName, database).coloumn);
+		tableRed.coloumnNamesInorder =sqlOperations.get_Current_Table(TableName, database).coloumnNamesInorder;
 		ArrayList<String> coloumns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 
@@ -96,6 +98,7 @@ public class HandelXml {
 						dummytable = sqlOperations.Handel_Select_Table_If_Exists(tableRed, database, coloumnInCondition,
 								operator, valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist);
 						selectedTable.addColoumns(dummytable.coloumn);
+						selectedTable.coloumnNamesInorder = dummytable.coloumnNamesInorder;
 						selectedTable.addTable(dummytable);
 						tableRed.rows.clear();
 						break;
@@ -106,6 +109,7 @@ public class HandelXml {
 									coloumnInCondition, operator, valueTobeCombared, ColoumnsNames, isWhereExist,
 									isStarExist);
 							selectedTable.addColoumns(dummytable.coloumn);
+							selectedTable.coloumnNamesInorder = dummytable.coloumnNamesInorder;
 							selectedTable.addTable(dummytable);
 							tableRed.rows.clear();
 						}
@@ -299,6 +303,7 @@ public class HandelXml {
 		int count = 0;
 		tableRed.setName(TableName + "Temp");
 		tableRed.addColoumns(sqlOperations.get_Current_Table(TableName, database).coloumn);
+		tableRed.coloumnNamesInorder = sqlOperations.get_Current_Table(TableName, database).coloumnNamesInorder;
 		ArrayList<String> coloumns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 
@@ -363,6 +368,7 @@ public class HandelXml {
 		Table tableRed = new Table();
 		tableRed.setName(TableName + "Temp");
 		tableRed.addColoumns(sqlOperations.get_Current_Table(TableName, database).coloumn);
+		tableRed.coloumnNamesInorder = sqlOperations.get_Current_Table(TableName, database).coloumnNamesInorder;
 		ArrayList<String> coloumns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 
@@ -456,7 +462,7 @@ public class HandelXml {
 		}
 	}
 
-	public static void readAllDatabasesBasicInfos(SQL sql) {
+	public  static void readAllDatabasesBasicInfos(SQL sql) {
 		File databases = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases");
 		FileFilter directoryFileFilter = new FileFilter() {
 			@Override
@@ -500,13 +506,15 @@ public class HandelXml {
 				// if(columns == null) return;
 				Table table = new Table();
 				table.coloumn = columns;
+				table.coloumnNamesInorder = coloumnsordernames;
 				table.setName(currentFile.getName().substring(0, currentFile.getName().length() - 4));
+				System.out.println(table.getName());
 				sql.DataBases.get(i).tables.add(table);
 			}
 		}
 	}
 
-	static List<String> read(File currentFile) {
+	public static List<String> read(File currentFile) {
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(currentFile.getPath()));
@@ -530,7 +538,8 @@ public class HandelXml {
 		return null;
 	}
 
-	static Map<String, String> getColumnsInfo(List<String> fileContent) {
+	public static Map<String, String> getColumnsInfo(List<String> fileContent) {
+		coloumnsordernames = new ArrayList<>();
 		if (fileContent.isEmpty())
 			return null;
 		fileContent.remove(0);
@@ -546,7 +555,8 @@ public class HandelXml {
 			} else {
 				type = "int";
 			}
-			columnsInfo.put(splittedLine[1], type);
+			coloumnsordernames.add(splittedLine[1]);
+			columnsInfo.put(splittedLine[1], type);			
 		}
 		return columnsInfo;
 	}
