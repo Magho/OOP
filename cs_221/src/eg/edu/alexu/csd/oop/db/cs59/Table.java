@@ -10,15 +10,11 @@ public class Table implements IComponent {
 	String TableName;
 	public Map<String, String> coloumn = new TreeMap<String, String>();
 	public ArrayList<Row> rows = new ArrayList<Row>();
+	public ArrayList<String> coloumnNamesInorder = new ArrayList<>();
 	
 	
 	public ArrayList<String> getColoumnsNames() {
-		ArrayList <String> coloumnsNames = new ArrayList <String>();
-		Set<String> set = coloumn.keySet();
-		for(String s : set){
-			coloumnsNames.add(s);
-		}
-		return coloumnsNames;
+		return coloumnNamesInorder;
 	}
 
 	public void addColoumns(Map<String, String> coloumn) {

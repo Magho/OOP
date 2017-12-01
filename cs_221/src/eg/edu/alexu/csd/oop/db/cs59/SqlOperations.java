@@ -48,18 +48,14 @@ public class SqlOperations {
 		handelXml.create_database_toXML(database.getName());
 	}
 
-	private void Handel_Create_Database_If_Exists_Before() throws SQLException {
-		throw new SQLException("Data base exists already");
-	}
-
-	public void create_table(String TableName, Map<String, String> coloumn) throws SQLException {
+	public void create_table(String TableName, Map<String, String> coloumn, ArrayList<String> coloumnNamesInorder) throws SQLException {
 
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 
-				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn);
+				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn,coloumnNamesInorder);
 			} else {
 				Handel_Database_Is_Not_Exists();
 			}
@@ -94,14 +90,15 @@ public class SqlOperations {
 	}
 
 	private void Handel_Create_Table_If_Not_Exists_Before(String TableName, DataBase database,
-			Map<String, String> coloumn) {
+			Map<String, String> coloumn, ArrayList<String> coloumnNamesInorder) {
 		Table table = new Table();
 		table.setName(TableName);
 		table.addColoumns(coloumn);
+		table.coloumnNamesInorder = coloumnNamesInorder;
 		get_Current_Database().tables.add(table);
 
 		handelXml.create_table_toXML(database.getName(), TableName);
-		handelXml.createDtdFile(database.DataBaseName, table);
+		handelXml.createDtdFile(database.DataBaseName, table,coloumnNamesInorder);
 	}
 
 	private void Handel_Create_Table_If_Exists_Before() throws SQLException {
@@ -113,14 +110,14 @@ public class SqlOperations {
 		throw new SQLException("database doesn't exist");
 	}
 
-	private void Handel_Create_Table_If_Database_Is_Already_exists(String TableName, Map<String, String> coloumn)
+	private void Handel_Create_Table_If_Database_Is_Already_exists(String TableName, Map<String, String> coloumn, ArrayList<String> coloumnNamesInorder)
 			throws SQLException {
 		DataBase database = get_Current_Database();
 
 		if (Check_If_table_Is_Already_Exists(TableName, database)) {
 			Handel_Create_Table_If_Exists_Before();
 		} else {
-			Handel_Create_Table_If_Not_Exists_Before(TableName, database, coloumn);
+			Handel_Create_Table_If_Not_Exists_Before(TableName, database, coloumn,coloumnNamesInorder);
 		}
 	}
 

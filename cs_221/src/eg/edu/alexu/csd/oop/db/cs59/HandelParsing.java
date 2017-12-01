@@ -144,6 +144,7 @@ public class HandelParsing {
 		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = null;
 		Map<String, String> coloumn = new TreeMap<>();
+		ArrayList<String> coloumnNamesInorder = new ArrayList<>();
 		String regex = "((?<=(create\\stable\\s))[\\w\\d_]+(?=\\s+))";
 		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = re.matcher(processedSQLCommand);
@@ -160,10 +161,11 @@ public class HandelParsing {
 			key = splitedData[0];
 			dataType = splitedData[1];
 			coloumn.put(key, dataType);
+			coloumnNamesInorder.add(key);
 		}
 
 		sqlOperations.setCurrentDatabase(currentDatabase);
-		sqlOperations.create_table(tableName, coloumn);
+		sqlOperations.create_table(tableName, coloumn,coloumnNamesInorder);
 	}
 
 	public void get_drop_database_info() throws SQLException {
