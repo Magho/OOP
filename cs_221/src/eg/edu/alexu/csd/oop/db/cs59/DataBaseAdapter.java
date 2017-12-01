@@ -42,7 +42,7 @@ public class DataBaseAdapter implements Database {
 		Table table = handelparsing.returnSelectedTable();
 		return table.convertTableTo2Darray();
 	}
-
+	
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
 		return handelparsing.setSQLCommand(query);

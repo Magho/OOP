@@ -9,7 +9,6 @@ import java.util.TreeMap;
 public class SqlOperations {
 	private String currentDatabase = null;
 	SQL sql;
-
 	HandelXml handelXml;
 
 	SqlOperations(SQL sql, String currentDatabase) {
@@ -539,7 +538,7 @@ public class SqlOperations {
 
 		} else {
 			newTable.addColoumns(tableToBeSelected.returnSelectedColoumns(ColoumnsNames));
-			newTable.coloumnNamesInorder = tableToBeSelected.coloumnNamesInorder;
+			newTable.coloumnNamesInorder = ColoumnsNames;
 		}
 		if (table.rows.size() != 0) {
 

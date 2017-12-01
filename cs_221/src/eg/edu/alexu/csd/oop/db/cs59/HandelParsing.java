@@ -130,12 +130,11 @@ public class HandelParsing {
 	public void get_create_database_info() throws SQLException {
 		create_database_Matcher.reset(SQLCommand.toLowerCase());
 		create_database_Matcher.find();
-		// +2 for escaping space and set index to the first element of the name
+		// +1 for escaping space and set index to the first element of the name
 		int indexOfDataBaseName = create_database_Matcher.end() + 1;
 		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
 
 		SetCurrentDatabaseName(DataBaseName, false);
-		// sqlOperations.create_database(DataBaseName);
 	}
 
 	public void get_create_table_info() throws SQLException {
