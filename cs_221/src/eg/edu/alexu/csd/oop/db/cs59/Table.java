@@ -1,35 +1,27 @@
 package eg.edu.alexu.csd.oop.db.cs59;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Set;
 
 public class Table implements IComponent {
 
 	String TableName;
-	public Map<String, String> coloumn = new TreeMap<String, String>();
+	public Map<String, String> coloumn = new LinkedHashMap<String, String>();
 	public ArrayList<Row> rows = new ArrayList<Row>();
-	public ArrayList<String> coloumnNamesInorder = new ArrayList<>();
 	
-//	public ArrayList<Coloumns> coloumnsInTheTable = new ArrayList<>();
 	
-//	Table() {
-//		for (int i = 0; i < coloumnNamesInorder.size(); i++) {
-//			Coloumns coloumn = new Coloumns();
-//			coloumn.setName(coloumnNamesInorder.get(i));
-//			coloumn.parentTable = this;
-//			coloumnsInTheTable.add(coloumn);
-//		}
-//	}
-
 	public ArrayList<String> getColoumnsNames() {
-		return coloumnNamesInorder;
+		ArrayList <String> coloumnsNames = new ArrayList <String>();
+		Set<String> set = coloumn.keySet();
+		for(String s : set){
+			coloumnsNames.add(s);
+		}
+		return coloumnsNames;
 	}
 
 	public void addColoumns(Map<String, String> coloumn) {
-//		for (int i = 0; i < coloumnNamesInorder.size(); i++) {
-//			coloumnsInTheTable.get(i).setType(coloumn.get(coloumnNamesInorder.get(i)));;
-//		}		
 		this.coloumn = coloumn;
 	}
 
@@ -69,7 +61,7 @@ public class Table implements IComponent {
 	}
 
 	public Map<String, String> returnSelectedColoumns(ArrayList<String> selectedColoumnsNames) {
-		Map<String, String> map = new TreeMap<>();
+		Map<String, String> map = new LinkedHashMap<>();
 		for (int i = 0; i < selectedColoumnsNames.size(); i++) {
 			map.put(selectedColoumnsNames.get(i), coloumn.get(selectedColoumnsNames.get(i)));
 		}
@@ -79,16 +71,19 @@ public class Table implements IComponent {
 	public Object[][] convertTableTo2Darray() {
 
 		Object[][] object = new Object[this.rows.size()][this.coloumn.size()];
-		System.out.println(coloumn.toString());
 		for (int i = 0; i < this.rows.size(); i++) {
-			for (int j = 0; j < this.coloumn.size(); j++) {
-				String str = this.coloumn.get(coloumnNamesInorder.get(j));
-				System.out.println( this.rows.get(i).coloumn.toString());
+			int j = 0;
+			for (String value : this.coloumn.keySet()) {
+
+				String str = this.coloumn.get(value);
 				if (str.compareToIgnoreCase("varchar") == 0) {
-					object[i][j] = this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j));
+
+					object[i][j] = this.rows.get(i).coloumn.get(value);
 				} else {
-					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j)));
+
+					object[i][j] = Integer.parseInt(this.rows.get(i).coloumn.get(value));
 				}
+				j++;
 			}
 		}
 		return object;

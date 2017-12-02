@@ -1,13 +1,13 @@
 package eg.edu.alexu.csd.oop.db.cs59;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Row implements IComponent {
 
 	private String Rownumber;
-	
+
 	public Map<String, String> coloumn;
 	public ArrayList<String> coloumnName;
 	private ArrayList<String> ColoumnValue;
@@ -20,7 +20,7 @@ public class Row implements IComponent {
 	}
 
 	private void create() {
-		coloumn = new TreeMap<String, String>();
+		coloumn = new LinkedHashMap<String, String>();
 		while (ColoumnValue.size() < coloumnName.size()) {
 			ColoumnValue.add("null");
 		}

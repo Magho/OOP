@@ -8,7 +8,7 @@ import eg.edu.alexu.csd.oop.db.Database;
 public class DataBaseAdapter implements Database {
 
 	HandelParsing handelparsing = new HandelParsing();
-	public Table SelectedTable;
+
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		databaseName = databaseName.toLowerCase();
@@ -40,17 +40,13 @@ public class DataBaseAdapter implements Database {
 	public Object[][] executeQuery(String query) throws SQLException {
 		handelparsing.setSQLCommand(query);
 		Table table = handelparsing.returnSelectedTable();
-		SelectedTable= returnSelectedTable (table);
+
 		return table.convertTableTo2Darray();
 	}
-	
+
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
 		return handelparsing.setSQLCommand(query);
-	}
-	
-	public Table returnSelectedTable (Table table){
-		return table;
 	}
 
 }

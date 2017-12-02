@@ -2,8 +2,8 @@ package eg.edu.alexu.csd.oop.db.cs59;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,11 +130,12 @@ public class HandelParsing {
 	public void get_create_database_info() throws SQLException {
 		create_database_Matcher.reset(SQLCommand.toLowerCase());
 		create_database_Matcher.find();
-		// +1 for escaping space and set index to the first element of the name
+		// +2 for escaping space and set index to the first element of the name
 		int indexOfDataBaseName = create_database_Matcher.end() + 1;
 		String DataBaseName = SQLCommand.substring(indexOfDataBaseName, SQLCommand.length()).trim();
 
 		SetCurrentDatabaseName(DataBaseName, false);
+		// sqlOperations.create_database(DataBaseName);
 	}
 
 	public void get_create_table_info() throws SQLException {
@@ -142,8 +143,7 @@ public class HandelParsing {
 
 		processedSQLCommand = SQLCommand.substring(0, SQLCommand.length());
 		String tableName = null;
-		Map<String, String> coloumn = new TreeMap<>();
-		ArrayList<String> coloumnNamesInorder = new ArrayList<>();
+		Map<String, String> coloumn = new LinkedHashMap<>();
 		String regex = "((?<=(create\\stable\\s))[\\w\\d_]+(?=\\s+))";
 		Pattern re = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		Matcher m = re.matcher(processedSQLCommand);
@@ -160,11 +160,10 @@ public class HandelParsing {
 			key = splitedData[0];
 			dataType = splitedData[1];
 			coloumn.put(key, dataType);
-			coloumnNamesInorder.add(key);
 		}
 
 		sqlOperations.setCurrentDatabase(currentDatabase);
-		sqlOperations.create_table(tableName, coloumn,coloumnNamesInorder);
+		sqlOperations.create_table(tableName, coloumn);
 	}
 
 	public void get_drop_database_info() throws SQLException {
@@ -279,7 +278,7 @@ public class HandelParsing {
 			operator = processedSQLCommand.substring(
 					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
 					processedSQLCommand.indexOf(valueToBecombared));
-		
+
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -296,7 +295,7 @@ public class HandelParsing {
 			operator = processedSQLCommand.substring(
 					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
 					processedSQLCommand.indexOf(valueToBecombared));
-		
+
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -350,9 +349,6 @@ public class HandelParsing {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
 		}
-		if (valueToBecombared.contains("\"")){
-			valueToBecombared = valueToBecombared.substring(1,valueToBecombared.length()-1);
-		}
 		return sqlOperations.delete(tableName, coloumnInCondition, operator, valueToBecombared, isWhereExist,
 				isStarExist);
 	}
@@ -395,7 +391,6 @@ public class HandelParsing {
 			operator = processedSQLCommand.substring(
 					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
 					processedSQLCommand.indexOf(valueToBecombared));
-		
 
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
@@ -407,7 +402,7 @@ public class HandelParsing {
 
 		Table tableToBeReturned = sqlOperations.select(tableName, coloumnInCondition, operator, valueToBecombared,
 				coloumnsName, isWhereExist, isStarExist);
-		
+
 		return tableToBeReturned;
 	}
 

@@ -3,13 +3,13 @@ package eg.edu.alexu.csd.oop.db.cs59;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class SqlOperations {
-
 	private String currentDatabase = null;
 	SQL sql;
+
 	HandelXml handelXml;
 
 	SqlOperations(SQL sql, String currentDatabase) {
@@ -48,15 +48,18 @@ public class SqlOperations {
 		handelXml.create_database_toXML(database.getName());
 	}
 
-	public void create_table(String TableName, Map<String, String> coloumn, ArrayList<String> coloumnNamesInorder)
-			throws SQLException {
+	private void Handel_Create_Database_If_Exists_Before() throws SQLException {
+		throw new SQLException("Data base exists already");
+	}
+
+	public void create_table(String TableName, Map<String, String> coloumn) throws SQLException {
 
 		if (currentDatabase == null) {
 			Handel_no_Current_DataBase_found();
 		} else {
 			if (check_If_Database_Is_Already_exists(currentDatabase)) {
 
-				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn, coloumnNamesInorder);
+				Handel_Create_Table_If_Database_Is_Already_exists(TableName, coloumn);
 			} else {
 				Handel_Database_Is_Not_Exists();
 			}
@@ -91,15 +94,14 @@ public class SqlOperations {
 	}
 
 	private void Handel_Create_Table_If_Not_Exists_Before(String TableName, DataBase database,
-			Map<String, String> coloumn, ArrayList<String> coloumnNamesInorder) {
+			Map<String, String> coloumn) {
 		Table table = new Table();
 		table.setName(TableName);
 		table.addColoumns(coloumn);
-		table.coloumnNamesInorder = coloumnNamesInorder;
 		get_Current_Database().tables.add(table);
 
 		handelXml.create_table_toXML(database.getName(), TableName);
-		handelXml.createDtdFile(database.DataBaseName, table, coloumnNamesInorder);
+		handelXml.createDtdFile(database.DataBaseName, table);
 	}
 
 	private void Handel_Create_Table_If_Exists_Before() throws SQLException {
@@ -111,14 +113,14 @@ public class SqlOperations {
 		throw new SQLException("database doesn't exist");
 	}
 
-	private void Handel_Create_Table_If_Database_Is_Already_exists(String TableName, Map<String, String> coloumn,
-			ArrayList<String> coloumnNamesInorder) throws SQLException {
+	private void Handel_Create_Table_If_Database_Is_Already_exists(String TableName, Map<String, String> coloumn)
+			throws SQLException {
 		DataBase database = get_Current_Database();
 
 		if (Check_If_table_Is_Already_Exists(TableName, database)) {
 			Handel_Create_Table_If_Exists_Before();
 		} else {
-			Handel_Create_Table_If_Not_Exists_Before(TableName, database, coloumn, coloumnNamesInorder);
+			Handel_Create_Table_If_Not_Exists_Before(TableName, database, coloumn);
 		}
 	}
 
@@ -210,31 +212,33 @@ public class SqlOperations {
 		Table table = get_Current_Table(TableName, database);
 		if (ColoumnName.size() == 0) {
 			ColoumnName = table.getColoumnsNames();
-		} else {
+		}else {
 			ArrayList<String> insertedColoumnsNamesInOrder = new ArrayList<String>();
 			String[] insertedColoumnsValuesInOrder = new String[coloumnsValues.get(0).length];
 			int k  = 0 ;
-			for (int i = 0; i < table.coloumnNamesInorder.size(); i++) {
+			System.out.println(ColoumnName.toString());
+			System.out.println(table.coloumn.toString());
+			for (String key : table.coloumn.keySet()) {
 				for (int j = 0; j < ColoumnName.size(); j++) {
-					if (table.coloumnNamesInorder.get(i).equals(ColoumnName.get(j))) {
+					if (key.equals(ColoumnName.get(j))) {
 						insertedColoumnsNamesInOrder.add(ColoumnName.get(j));
 						insertedColoumnsValuesInOrder[k++] = coloumnsValues.get(0)[j];
 						break;
 					}
 				}
 			}
+
 			coloumnsValues = new ArrayList<String[]>();
 			coloumnsValues.add(insertedColoumnsValuesInOrder);
-			System.out.print(coloumnsValues.get(0)[0] + "   ");
-			System.out.print(coloumnsValues.get(0)[1] +  "   ");
-			System.out.println(coloumnsValues.get(0)[2]);
+			System.out.print(coloumnsValues.get(0)[0] + "   1111111");
+			System.out.print(coloumnsValues.get(0)[1] +  "   2222222");
+			System.out.println(coloumnsValues.get(0)[2] + "   33333333");
 			ColoumnName =new ArrayList<>();
 			ColoumnName = insertedColoumnsNamesInOrder;
 			System.out.println(ColoumnName.toString());
 		}
 		Table newInsertedRaws = new Table();
 		newInsertedRaws.addColoumns(table.coloumn);
-		newInsertedRaws.coloumnNamesInorder = table.coloumnNamesInorder;
 		newInsertedRaws.setName(TableName);
 		for (int i = 0; i < coloumnsValues.size(); i++) {
 			ArrayList<String> coloumnvalues = new ArrayList<String>();
@@ -242,11 +246,8 @@ public class SqlOperations {
 				coloumnvalues.add(coloumnsValues.get(i)[j]);
 			}
 			Row row = new Row(ColoumnName, coloumnvalues);
-//			System.out.println(row.coloumn.toString());
 			table.rows.add(row);
 			newInsertedRaws.rows.add(row);
-//			System.out.println(newInsertedRaws.rows.get(0).coloumn.toString());
-
 		}
 		handelXml.insert_toXML(database.getName(), newInsertedRaws);
 	}
@@ -303,8 +304,8 @@ public class SqlOperations {
 			boolean isWhereExist, boolean isStarExist) throws SQLException {
 		int count = 0;
 		if (table.rows.size() == 0) {
+
 		} else {
-			System.out.println(table.rows.size() + "ggggggggggggggggggggggggggg");
 			for (int i = 0; i < table.rows.size(); i++) {
 				if (isWhereExist) {
 					if (table.coloumn.get(coloumnInCondition).compareToIgnoreCase("varchar") == 0) {
@@ -364,7 +365,7 @@ public class SqlOperations {
 					// no where condition
 
 					boolean wasAsWantToUpdate = false;
-					Map<String, String> map = new TreeMap<String, String>();
+					Map<String, String> map = new LinkedHashMap<String, String>();
 					for (int l = 0; l < coloumsnName.size(); l++) {
 						map.put(coloumsnName.get(l), coloumsnValues.get(l));
 
@@ -543,6 +544,7 @@ public class SqlOperations {
 		if (Check_If_table_Is_Already_Exists(TableName, database)) {
 			Table returnedTable = handelXml.select_toXML(TableName, database, coloumnInCondition, operator,
 					valueTobeCombared, ColoumnsNames, isWhereExist, isStarExist);
+
 			return returnedTable;
 		} else {
 			Handel_Update_If_Table_Not_Exists();
@@ -559,11 +561,9 @@ public class SqlOperations {
 		if (ColoumnsNames.size() == 0) {
 			ColoumnsNames = tableToBeSelected.getColoumnsNames();
 			newTable.addColoumns(table.coloumn);
-			newTable.coloumnNamesInorder = table.coloumnNamesInorder;
 
 		} else {
 			newTable.addColoumns(tableToBeSelected.returnSelectedColoumns(ColoumnsNames));
-			newTable.coloumnNamesInorder = ColoumnsNames;
 		}
 		if (table.rows.size() != 0) {
 
@@ -601,7 +601,6 @@ public class SqlOperations {
 								}
 							} else if (operator.equals("<")) {
 								if (Integer.parseInt(table.rows.get(i).coloumn.get(coloumnInCondition)) < value) {
-
 									Row row = new Row(ColoumnsNames, table.rows.get(i)
 											.SelectSpecificColoumnsValuse(table.rows.get(i).coloumnName));
 									newTable.rows.add(row);
