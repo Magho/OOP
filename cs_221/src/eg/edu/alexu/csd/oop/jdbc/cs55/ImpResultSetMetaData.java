@@ -22,8 +22,9 @@ public class ImpResultSetMetaData implements java.sql.ResultSetMetaData{
 	
 	@Override
 	public int getColumnCount() throws SQLException {
-	
-		return this.columns.size();
+
+		throw new RuntimeException();
+		//return this.columns.size();
 	}
 	
 	@Override
@@ -34,13 +35,15 @@ public class ImpResultSetMetaData implements java.sql.ResultSetMetaData{
 	
 	@Override
 	public int getColumnType(int column) throws SQLException {
-		String type = this.table.coloumn.get(columns.get(column)); 
-		if(type.equalsIgnoreCase("varchar")) {
-			return java.sql.Types.VARCHAR;
-		}
-		else {
-			return java.sql.Types.INTEGER;
-		}
+		throw new RuntimeException();
+		
+//		String type = this.table.coloumn.get(columns.get(column)); 
+//		if(type.equalsIgnoreCase("varchar")) {
+//			return java.sql.Types.VARCHAR;
+//		}
+//		else {
+//			return java.sql.Types.INTEGER;
+//		}
 	}
 	
 	@Override
