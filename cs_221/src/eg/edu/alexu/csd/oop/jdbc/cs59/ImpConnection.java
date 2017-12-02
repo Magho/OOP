@@ -31,7 +31,7 @@ public class ImpConnection implements java.sql.Connection{
 	public ImpConnection(String path) {
 		url = path.toLowerCase();
 		db = new DataBaseAdapter();
-		db.createDatabase(url.substring(url.lastIndexOf(System.getProperty("file.separator"))+1, url.length()), true);
+		db.createDatabase("data", true);
 	}
 	
 	@Override

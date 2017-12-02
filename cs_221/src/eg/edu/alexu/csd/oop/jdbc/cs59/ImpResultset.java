@@ -10,6 +10,7 @@ import java.sql.Clob;
 import java.sql.Date;
 import java.sql.NClob;
 import java.sql.Ref;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.RowId;
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ public class ImpResultset implements java.sql.ResultSet{
 	public ImpResultset(Object[][] obj,String name,ArrayList<String> columns,ImpStatement statment) {
 		
 		resault = obj;
+		System.out.println(obj[0][0] + " Objext 2D");
 		cursor = -1;
 		this.tableName = name;
 		this.statement = statment;
