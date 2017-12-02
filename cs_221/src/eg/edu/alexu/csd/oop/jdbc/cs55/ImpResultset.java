@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc.cs59;
+package eg.edu.alexu.csd.oop.jdbc.cs55;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
 
-import eg.edu.alexu.csd.oop.db.cs59.DataBase;
-import eg.edu.alexu.csd.oop.db.cs59.SQL;
-import eg.edu.alexu.csd.oop.db.cs59.Table;
+import eg.edu.alexu.csd.oop.db.cs55.DataBase;
+import eg.edu.alexu.csd.oop.db.cs55.SQL;
+import eg.edu.alexu.csd.oop.db.cs55.Table;
 
 public class ImpResultset implements java.sql.ResultSet{
 

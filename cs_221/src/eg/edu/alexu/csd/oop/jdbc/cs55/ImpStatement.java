@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc.cs59;
+package eg.edu.alexu.csd.oop.jdbc.cs55;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,7 +7,7 @@ import java.sql.SQLWarning;
 import java.util.ArrayList;
 
 import eg.edu.alexu.csd.oop.db.Database;
-import eg.edu.alexu.csd.oop.db.cs59.*;
+import eg.edu.alexu.csd.oop.db.cs55.*;
 
 public class ImpStatement implements java.sql.Statement{
 

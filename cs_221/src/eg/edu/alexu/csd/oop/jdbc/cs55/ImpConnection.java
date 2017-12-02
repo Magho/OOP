@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.jdbc.cs59;
+package eg.edu.alexu.csd.oop.jdbc.cs55;
 
 import java.io.File;
 import java.sql.Array;
@@ -20,7 +20,7 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 import eg.edu.alexu.csd.oop.db.Database;
-import eg.edu.alexu.csd.oop.db.cs59.DataBaseAdapter;
+import eg.edu.alexu.csd.oop.db.cs55.DataBaseAdapter;
 
 public class ImpConnection implements java.sql.Connection{
 

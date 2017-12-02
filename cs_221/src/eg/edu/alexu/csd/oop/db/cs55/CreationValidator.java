@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs59;
+package eg.edu.alexu.csd.oop.db.cs55;
 /**
  * this class validate the Create and Drop sql command.
  * @author Muhammed
