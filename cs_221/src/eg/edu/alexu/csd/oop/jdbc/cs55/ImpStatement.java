@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.jdbc.cs55;
 
+import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,8 +57,7 @@ public class ImpStatement implements java.sql.Statement{
 	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		// 
-		throw new RuntimeException();
-//		return ret;
+		return ret;
 	}	
 	@Override
 	public boolean execute(String sql) throws SQLException {
@@ -90,45 +90,48 @@ public class ImpStatement implements java.sql.Statement{
 	@Override
 	public int[] executeBatch() throws SQLException {
 		// TODO not sure of the return type
-		throw new RuntimeException();
-		
-//		int updateCount[] = new int[batch.size()];
-//		int counter = 0;
-//		for(String query:batch){
-//			updateCount[counter] = db.executeUpdateQuery(query);
-//			counter++;
-//		}
-//		return updateCount;
+		int updateCount[] = new int[batch.size()];
+		int counter = 0;
+		for(String query:batch){
+			query = query.toLowerCase();
+			if(query.contains("create")||query.contains("drop"))
+				updateCount[counter] = db.executeStructureQuery(query) ? 1 : 0;
+			else {
+				updateCount[counter] = db.executeUpdateQuery(query);
+			}
+			counter++;
+		}
+		return updateCount;
 	}
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		throw new RuntimeException();
-//		Object[][] res = db.executeQuery(sql);
-//		String name = sql.replaceAll("select\\s.+\\sfrom\\s([a-z0-9_]+).+", "$1");
-//		Table table = ((DataBaseAdapter)db).SelectedTable;
-//		
-//		ResultSet resualt = null;
-//		ArrayList<String> ColoumnNames = new ArrayList<>();
-//		System.out.println(table.coloumn.toString());
-//		for (String key  : table.coloumn.keySet()){
-//			ColoumnNames.add(key);
-//		}
-//		if(sql.contains("*")){
-//			resualt = new ImpResultset(res,name,ColoumnNames,this);
-//		//	System.out.println(ColoumnNames);
-//		}
-//		else{
-//			System.out.println("in");
-//			String coloums = sql.trim().toLowerCase().replaceAll("select\\s+(.+)\\s+from.+", "$1");
-//			coloums = coloums.replaceAll("\\s*,\\s*", ",");
-//			ArrayList<String> coloumsName = new ArrayList<String>();
-//			for(String str:coloums.split(",")){
-//				coloumsName.add(str);
-//			}
-//			resualt = new ImpResultset(res, name, coloumsName, this);
-//		}
-//		return resualt;
+	
+		Object[][] res = db.executeQuery(sql);
+		String name = sql.replaceAll("select\\s.+\\sfrom\\s([a-z0-9_]+).+", "$1");
+		Table table = ((DataBaseAdapter)db).SelectedTable;
+		
+		ResultSet resualt = null;
+		ArrayList<String> ColoumnNames = new ArrayList<>();
+		System.out.println(table.coloumn.toString());
+		for (String key  : table.coloumn.keySet()){
+			ColoumnNames.add(key);
+		}
+		if(sql.contains("*")){
+			resualt = new ImpResultset(res,name,ColoumnNames,this);
+		//	System.out.println(ColoumnNames);
+		}
+		else{
+			System.out.println("in");
+			String coloums = sql.trim().toLowerCase().replaceAll("select\\s+(.+)\\s+from.+", "$1");
+			coloums = coloums.replaceAll("\\s*,\\s*", ",");
+			ArrayList<String> coloumsName = new ArrayList<String>();
+			for(String str:coloums.split(",")){
+				coloumsName.add(str);
+			}
+			resualt = new ImpResultset(res, name, coloumsName, this);
+		}
+		return resualt;
 	}
 
 	@Override
@@ -137,11 +140,9 @@ public class ImpStatement implements java.sql.Statement{
 		//if (db.executeUpdateQuery(sql) == 0) {
 			//throw new RuntimeException(sql);
 		//}
-		
-		return db.executeUpdateQuery(sql) + 15031;
+		return db.executeUpdateQuery(sql);
 	}
 
-	
 	@Override
 	public Connection getConnection() throws SQLException {
 		return con;
@@ -149,11 +150,10 @@ public class ImpStatement implements java.sql.Statement{
 	
 	@Override
 	public int getQueryTimeout() throws SQLException {
-		throw new RuntimeException();
-//		return this.timeout;
+	
+		return this.timeout;
 	}
 
-	
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
