@@ -56,7 +56,8 @@ public class ImpStatement implements java.sql.Statement{
 	@Override
 	public int getResultSetConcurrency() throws SQLException {
 		// 
-		return ret;
+		throw new RuntimeException();
+//		return ret;
 	}	
 	@Override
 	public boolean execute(String sql) throws SQLException {
@@ -89,13 +90,15 @@ public class ImpStatement implements java.sql.Statement{
 	@Override
 	public int[] executeBatch() throws SQLException {
 		// TODO not sure of the return type
-		int updateCount[] = new int[batch.size()];
-		int counter = 0;
-		for(String query:batch){
-			updateCount[counter] = db.executeUpdateQuery(query);
-			counter++;
-		}
-		return updateCount;
+		throw new RuntimeException();
+		
+//		int updateCount[] = new int[batch.size()];
+//		int counter = 0;
+//		for(String query:batch){
+//			updateCount[counter] = db.executeUpdateQuery(query);
+//			counter++;
+//		}
+//		return updateCount;
 	}
 
 	@Override
@@ -134,7 +137,8 @@ public class ImpStatement implements java.sql.Statement{
 		//if (db.executeUpdateQuery(sql) == 0) {
 			//throw new RuntimeException(sql);
 		//}
-		return db.executeUpdateQuery(sql);
+		throw new RuntimeException();
+//		return db.executeUpdateQuery(sql);
 	}
 
 	@Override
@@ -144,8 +148,8 @@ public class ImpStatement implements java.sql.Statement{
 	
 	@Override
 	public int getQueryTimeout() throws SQLException {
-	
-		return this.timeout;
+		throw new RuntimeException();
+//		return this.timeout;
 	}
 
 
