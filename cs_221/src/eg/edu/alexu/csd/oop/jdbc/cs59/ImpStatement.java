@@ -63,7 +63,6 @@ public class ImpStatement implements java.sql.Statement{
 					response = true;
 			}else if(query.matches("delete.*")||query.matches("update.*")){
 				updateRows = db.executeUpdateQuery(query);
-				if(updateRows != 0)
 					response = true;
 			}
 			return response;
