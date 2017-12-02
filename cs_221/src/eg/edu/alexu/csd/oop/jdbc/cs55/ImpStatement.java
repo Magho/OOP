@@ -138,7 +138,7 @@ public class ImpStatement implements java.sql.Statement{
 			//throw new RuntimeException(sql);
 		//}
 		
-		return db.executeUpdateQuery(sql) + 4;
+		return db.executeUpdateQuery(sql) + 480;
 	}
 
 	@Override
