@@ -11,7 +11,8 @@ import eg.edu.alexu.csd.oop.db.cs55.*;
 
 public class ImpStatement implements java.sql.Statement{
 
-	final int alrhwanAltani = 2;
+	private int ret = 2;
+	private ResultSet rec = null;
 	private int timeout = 10;
 	private ArrayList<String> batch = new ArrayList<String>();
 	private Database db;
@@ -46,7 +47,17 @@ public class ImpStatement implements java.sql.Statement{
 		//TODO not sure of the implementation
 		db = null;
 	}
-	
+	@Override
+	public ResultSet getResultSet() throws SQLException {
+		// 
+		return rec;
+	}
+
+	@Override
+	public int getResultSetConcurrency() throws SQLException {
+		// 
+		return ret;
+	}	
 	@Override
 	public boolean execute(String sql) throws SQLException {
 	
@@ -56,15 +67,15 @@ public class ImpStatement implements java.sql.Statement{
 			if(query.matches("create.*")||query.matches("drop.*")){
 				response = db.executeStructureQuery(query);
 			}else if(query.matches("select.*")){
-				res = executeQuery(query);
+				rec = executeQuery(query);
 				if(((ImpResultset) res).resault.length != 0)
 					response = true;
 			}else if(query.matches("insert.*")){
-				updateRows = db.executeUpdateQuery(query);
+				ret = db.executeUpdateQuery(query);
 				if(updateRows != 0)
 					response = true;
 			}else if(query.matches("delete.*")||query.matches("update.*")){
-				updateRows = db.executeUpdateQuery(query);
+				ret = db.executeUpdateQuery(query);
 					response = true;
 			}
 			return response;
@@ -120,9 +131,9 @@ public class ImpStatement implements java.sql.Statement{
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		//
-		if (db.executeUpdateQuery(sql) == 0) {
-			throw new RuntimeException(sql);
-		}
+		//if (db.executeUpdateQuery(sql) == 0) {
+			//throw new RuntimeException(sql);
+		//}
 		return db.executeUpdateQuery(sql);
 	}
 
@@ -268,17 +279,7 @@ public class ImpStatement implements java.sql.Statement{
 	}
 
 	
-	@Override
-	public ResultSet getResultSet() throws SQLException {
-		// 
-		throw new java.lang.UnsupportedOperationException();
-	}
 
-	@Override
-	public int getResultSetConcurrency() throws SQLException {
-		// 
-		throw new java.lang.UnsupportedOperationException();
-	}
 
 	@Override
 	public int getResultSetHoldability() throws SQLException {
