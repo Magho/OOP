@@ -53,16 +53,18 @@ public class ImpStatement implements java.sql.Statement{
 		try{
 			String query = sql.toLowerCase().trim();
 			if(query.matches("create.*")||query.matches("drop.*")){
-				db.executeStructureQuery(query);
+				response = db.executeStructureQuery(query);
 			}else if(query.matches("select.*")){
 				res = executeQuery(query);
 				response = true;
 			}else if(query.matches("insert.*")){
 				updateRows = db.executeUpdateQuery(query);
-				response = false;
+				if(updateRows != 0)
+					response = true;
 			}else if(query.matches("delete.*")||query.matches("update.*")){
 				updateRows = db.executeUpdateQuery(query);
-				response = false;
+				if(updateRows != 0)
+					response = true;
 			}
 			return response;
 		} catch(SQLException e){
