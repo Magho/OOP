@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import eg.edu.alexu.csd.oop.db.Database;
 
 public class DataBaseAdapter implements Database {
-
+	public Table SelectedTable;
 	HandelParsing handelparsing = new HandelParsing();
 
 	@Override
@@ -40,7 +40,7 @@ public class DataBaseAdapter implements Database {
 	public Object[][] executeQuery(String query) throws SQLException {
 		handelparsing.setSQLCommand(query);
 		Table table = handelparsing.returnSelectedTable();
-
+		SelectedTable = returnSelectedTable (table);
 		return table.convertTableTo2Darray();
 	}
 
@@ -49,4 +49,7 @@ public class DataBaseAdapter implements Database {
 		return handelparsing.setSQLCommand(query);
 	}
 
+	public Table returnSelectedTable (Table table){
+		return table;
+	}
 }
