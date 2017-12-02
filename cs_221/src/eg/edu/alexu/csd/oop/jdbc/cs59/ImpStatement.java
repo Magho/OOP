@@ -56,7 +56,8 @@ public class ImpStatement implements java.sql.Statement{
 				response = db.executeStructureQuery(query);
 			}else if(query.matches("select.*")){
 				res = executeQuery(query);
-				response = true;
+				if(((ImpResultset) res).resault.length != 0)
+					response = true;
 			}else if(query.matches("insert.*")){
 				updateRows = db.executeUpdateQuery(query);
 				if(updateRows != 0)
@@ -91,8 +92,10 @@ public class ImpStatement implements java.sql.Statement{
 		Object[][] res = db.executeQuery(sql);
 		String name = sql.replaceAll("select\\s.+\\sfrom\\s([a-z0-9_]+).+", "$1");
 		Table table = ((DataBaseAdapter)db).SelectedTable;
+		
 		ResultSet resualt = null;
 		ArrayList<String> ColoumnNames = new ArrayList<>();
+		System.out.println(table.coloumn.toString());
 		for (String key  : table.coloumn.keySet()){
 			ColoumnNames.add(key);
 		}
