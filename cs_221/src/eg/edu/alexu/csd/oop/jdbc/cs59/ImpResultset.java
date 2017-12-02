@@ -37,7 +37,7 @@ public class ImpResultset implements java.sql.ResultSet{
 	public ImpResultset(Object[][] obj,String name,ArrayList<String> columns,ImpStatement statment) {
 		
 		resault = obj;
-		cursor = 0;
+		cursor = -1;
 		this.tableName = name;
 		this.statement = statment;
 	}
@@ -211,6 +211,10 @@ public class ImpResultset implements java.sql.ResultSet{
 			return false;
 		}
 		return true;
+	}
+	
+	public Object[][] getObject(){
+		return resault;
 	}
 
 //-------------------------------------------------------------------------------------------------------------------------------
