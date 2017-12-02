@@ -38,7 +38,7 @@ public class ImpResultset implements java.sql.ResultSet{
 	public ImpResultset(Object[][] obj,String name,ArrayList<String> columns,ImpStatement statment) {
 		
 		resault = obj;
-		System.out.println(obj[0][0] + " Objext 2D");
+		//System.out.println(obj[0][0] + " Objext 2D");
 		cursor = -1;
 		this.tableName = name;
 		this.statement = statment;
