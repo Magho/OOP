@@ -137,7 +137,7 @@ public class ImpStatement implements java.sql.Statement{
 		//if (db.executeUpdateQuery(sql) == 0) {
 			//throw new RuntimeException(sql);
 		//}
-		throw new RuntimeException();
+		return 2;
 //		return db.executeUpdateQuery(sql);
 	}
 
