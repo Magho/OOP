@@ -100,32 +100,32 @@ public class ImpStatement implements java.sql.Statement{
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-	
-		Object[][] res = db.executeQuery(sql);
-		String name = sql.replaceAll("select\\s.+\\sfrom\\s([a-z0-9_]+).+", "$1");
-		Table table = ((DataBaseAdapter)db).SelectedTable;
-		
-		ResultSet resualt = null;
-		ArrayList<String> ColoumnNames = new ArrayList<>();
-		System.out.println(table.coloumn.toString());
-		for (String key  : table.coloumn.keySet()){
-			ColoumnNames.add(key);
-		}
-		if(sql.contains("*")){
-			resualt = new ImpResultset(res,name,ColoumnNames,this);
-		//	System.out.println(ColoumnNames);
-		}
-		else{
-			System.out.println("in");
-			String coloums = sql.trim().toLowerCase().replaceAll("select\\s+(.+)\\s+from.+", "$1");
-			coloums = coloums.replaceAll("\\s*,\\s*", ",");
-			ArrayList<String> coloumsName = new ArrayList<String>();
-			for(String str:coloums.split(",")){
-				coloumsName.add(str);
-			}
-			resualt = new ImpResultset(res, name, coloumsName, this);
-		}
-		return resualt;
+		throw new RuntimeException();
+//		Object[][] res = db.executeQuery(sql);
+//		String name = sql.replaceAll("select\\s.+\\sfrom\\s([a-z0-9_]+).+", "$1");
+//		Table table = ((DataBaseAdapter)db).SelectedTable;
+//		
+//		ResultSet resualt = null;
+//		ArrayList<String> ColoumnNames = new ArrayList<>();
+//		System.out.println(table.coloumn.toString());
+//		for (String key  : table.coloumn.keySet()){
+//			ColoumnNames.add(key);
+//		}
+//		if(sql.contains("*")){
+//			resualt = new ImpResultset(res,name,ColoumnNames,this);
+//		//	System.out.println(ColoumnNames);
+//		}
+//		else{
+//			System.out.println("in");
+//			String coloums = sql.trim().toLowerCase().replaceAll("select\\s+(.+)\\s+from.+", "$1");
+//			coloums = coloums.replaceAll("\\s*,\\s*", ",");
+//			ArrayList<String> coloumsName = new ArrayList<String>();
+//			for(String str:coloums.split(",")){
+//				coloumsName.add(str);
+//			}
+//			resualt = new ImpResultset(res, name, coloumsName, this);
+//		}
+//		return resualt;
 	}
 
 	@Override
