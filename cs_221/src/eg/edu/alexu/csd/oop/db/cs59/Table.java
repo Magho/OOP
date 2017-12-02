@@ -10,12 +10,26 @@ public class Table implements IComponent {
 	public Map<String, String> coloumn = new TreeMap<String, String>();
 	public ArrayList<Row> rows = new ArrayList<Row>();
 	public ArrayList<String> coloumnNamesInorder = new ArrayList<>();
+	
+//	public ArrayList<Coloumns> coloumnsInTheTable = new ArrayList<>();
+	
+//	Table() {
+//		for (int i = 0; i < coloumnNamesInorder.size(); i++) {
+//			Coloumns coloumn = new Coloumns();
+//			coloumn.setName(coloumnNamesInorder.get(i));
+//			coloumn.parentTable = this;
+//			coloumnsInTheTable.add(coloumn);
+//		}
+//	}
 
 	public ArrayList<String> getColoumnsNames() {
 		return coloumnNamesInorder;
 	}
 
 	public void addColoumns(Map<String, String> coloumn) {
+//		for (int i = 0; i < coloumnNamesInorder.size(); i++) {
+//			coloumnsInTheTable.get(i).setType(coloumn.get(coloumnNamesInorder.get(i)));;
+//		}		
 		this.coloumn = coloumn;
 	}
 
@@ -65,14 +79,11 @@ public class Table implements IComponent {
 	public Object[][] convertTableTo2Darray() {
 
 		Object[][] object = new Object[this.rows.size()][this.coloumn.size()];
-//		System.out.println(this.rows.size());
-//		System.out.println(this.coloumn.size());
-//		System.out.println(coloumnNamesInorder.size());
-		
+		System.out.println(coloumn.toString());
 		for (int i = 0; i < this.rows.size(); i++) {
-			for (int j = 0; j < coloumn.size(); j++) {
+			for (int j = 0; j < this.coloumn.size(); j++) {
 				String str = this.coloumn.get(coloumnNamesInorder.get(j));
-//				System.out.println(str);
+				System.out.println( this.rows.get(i).coloumn.toString());
 				if (str.compareToIgnoreCase("varchar") == 0) {
 					object[i][j] = this.rows.get(i).coloumn.get(coloumnNamesInorder.get(j));
 				} else {
@@ -83,5 +94,4 @@ public class Table implements IComponent {
 		return object;
 	}
 
-	
 }

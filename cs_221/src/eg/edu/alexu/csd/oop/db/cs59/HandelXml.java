@@ -69,7 +69,7 @@ public class HandelXml {
 		tableRed.setName(TableName + "Temp");
 		Table dummytable;
 		tableRed.addColoumns(sqlOperations.get_Current_Table(TableName, database).coloumn);
-		tableRed.coloumnNamesInorder =sqlOperations.get_Current_Table(TableName, database).coloumnNamesInorder;
+		tableRed.coloumnNamesInorder = sqlOperations.get_Current_Table(TableName, database).coloumnNamesInorder;
 		ArrayList<String> coloumns = new ArrayList<String>();
 		ArrayList<String> values = new ArrayList<String>();
 
@@ -253,11 +253,12 @@ public class HandelXml {
 			for (int i = 0; i < newInsertedRaws.rows.size(); i++) {
 				Element row = document.createElement("row");
 				root.appendChild(row);
-
-				for (Map.Entry<String, String> r : newInsertedRaws.rows.get(i).coloumn.entrySet()) {
-					Element prop = document.createElement(r.getKey());
-					prop.setTextContent(r.getValue());
+				for (int j = 0; j < newInsertedRaws.rows.get(i).coloumnName.size(); j++) {
+					Element prop = document.createElement(newInsertedRaws.rows.get(i).coloumnName.get(j));
+					prop.setTextContent(
+							newInsertedRaws.rows.get(i).coloumn.get(newInsertedRaws.rows.get(i).coloumnName.get(j)));
 					row.appendChild(prop);
+
 				}
 			}
 
@@ -406,8 +407,8 @@ public class HandelXml {
 						counter++;
 						Row row = new Row(coloumns, values);
 						tableRed.create(row);
-						coloumns.clear();
-						values.clear();
+						coloumns = new ArrayList<String>();
+						values = new ArrayList<String>();
 					} else {
 						coloumns.add(endElement.getName().getLocalPart());
 						if (coloumns.size() > values.size()) {
@@ -438,7 +439,7 @@ public class HandelXml {
 		sw.write("<!DOCTYPE table [\n");
 		sw.write("<!ELEMENT table (row+)>\n");
 		StringBuilder columnsOfARow = new StringBuilder(10 * table.coloumn.size());
-		for (int i = 0 ; i < coloumnNamesInorder.size() ; i++) {
+		for (int i = 0; i < coloumnNamesInorder.size(); i++) {
 			columnsOfARow.append(coloumnNamesInorder.get(i) + ",");
 		}
 		sw.write("<!ELEMENT row (" + columnsOfARow.toString().substring(0, columnsOfARow.toString().length() - 1)
@@ -462,7 +463,7 @@ public class HandelXml {
 		}
 	}
 
-	public  static void readAllDatabasesBasicInfos(SQL sql) {
+	public static void readAllDatabasesBasicInfos(SQL sql) {
 		File databases = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Databases");
 		FileFilter directoryFileFilter = new FileFilter() {
 			@Override
@@ -555,7 +556,7 @@ public class HandelXml {
 				type = "int";
 			}
 			coloumnsordernames.add(splittedLine[1]);
-			columnsInfo.put(splittedLine[1], type);			
+			columnsInfo.put(splittedLine[1], type);
 		}
 		return columnsInfo;
 	}

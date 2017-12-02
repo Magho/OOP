@@ -272,11 +272,14 @@ public class HandelParsing {
 		}
 		String[] splitedDataAfterSet = dataAfterSet.split(",");
 		for (String s : splitedDataAfterSet) {
-			String data[] = s.split("[><=]=?");
+			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
 
+			operator = processedSQLCommand.substring(
+					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
+					processedSQLCommand.indexOf(valueToBecombared));
+		
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -288,9 +291,12 @@ public class HandelParsing {
 					processedSQLCommand.length());
 			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
 
+			operator = processedSQLCommand.substring(
+					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
+					processedSQLCommand.indexOf(valueToBecombared));
+		
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
@@ -344,6 +350,9 @@ public class HandelParsing {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
 			}
 		}
+		if (valueToBecombared.contains("\"")){
+			valueToBecombared = valueToBecombared.substring(1,valueToBecombared.length()-1);
+		}
 		return sqlOperations.delete(tableName, coloumnInCondition, operator, valueToBecombared, isWhereExist,
 				isStarExist);
 	}
@@ -381,8 +390,12 @@ public class HandelParsing {
 					processedSQLCommand.length());
 			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
-			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
+
+			operator = processedSQLCommand.substring(
+					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
+					processedSQLCommand.indexOf(valueToBecombared));
+		
 
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
@@ -394,7 +407,7 @@ public class HandelParsing {
 
 		Table tableToBeReturned = sqlOperations.select(tableName, coloumnInCondition, operator, valueToBecombared,
 				coloumnsName, isWhereExist, isStarExist);
-
+		
 		return tableToBeReturned;
 	}
 
