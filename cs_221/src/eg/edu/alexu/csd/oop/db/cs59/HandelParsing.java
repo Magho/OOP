@@ -271,13 +271,10 @@ public class HandelParsing {
 		}
 		String[] splitedDataAfterSet = dataAfterSet.split(",");
 		for (String s : splitedDataAfterSet) {
-			String data[] = processedSQLCommand.split("[><=]=?");
+			String data[] = s.split("[><=]=?");
 			coloumnInCondition = data[0];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-
-			operator = processedSQLCommand.substring(
-					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
-					processedSQLCommand.indexOf(valueToBecombared));
 
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
@@ -290,11 +287,8 @@ public class HandelParsing {
 					processedSQLCommand.length());
 			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-
-			operator = processedSQLCommand.substring(
-					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
-					processedSQLCommand.indexOf(valueToBecombared));
 
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
@@ -337,13 +331,17 @@ public class HandelParsing {
 					processedSQLCommand.indexOf("where") - 1);
 			processedSQLCommand = processedSQLCommand.substring(processedSQLCommand.indexOf("where") + 6,
 					processedSQLCommand.length());
+//			String data[] = processedSQLCommand.split("[><=]=?");
+//			coloumnInCondition = data[0];
+//			valueToBecombared = data[1];
+//
+//			operator = processedSQLCommand.substring(
+//					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
+//					processedSQLCommand.indexOf(valueToBecombared));
 			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-
-			operator = processedSQLCommand.substring(
-					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
-					processedSQLCommand.indexOf(valueToBecombared));
 			
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
@@ -386,11 +384,8 @@ public class HandelParsing {
 					processedSQLCommand.length());
 			String data[] = processedSQLCommand.split("[><=]=?");
 			coloumnInCondition = data[0];
+			operator = processedSQLCommand.replaceAll(".+([><=]).+", "$1");
 			valueToBecombared = data[1];
-
-			operator = processedSQLCommand.substring(
-					processedSQLCommand.indexOf(coloumnInCondition) + coloumnInCondition.length(),
-					processedSQLCommand.indexOf(valueToBecombared));
 
 			if (valueToBecombared.charAt(0) == '\'') {
 				valueToBecombared = valueToBecombared.substring(1, valueToBecombared.length() - 1);
