@@ -141,6 +141,7 @@ public class ImpStatement implements java.sql.Statement{
 		return db.executeUpdateQuery(sql) + 15031;
 	}
 
+	
 	@Override
 	public Connection getConnection() throws SQLException {
 		return con;
@@ -152,6 +153,7 @@ public class ImpStatement implements java.sql.Statement{
 //		return this.timeout;
 	}
 
+	
 
 	@Override
 	public void setQueryTimeout(int seconds) throws SQLException {
