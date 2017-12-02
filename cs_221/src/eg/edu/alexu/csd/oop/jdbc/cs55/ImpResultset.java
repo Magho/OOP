@@ -90,15 +90,15 @@ public class ImpResultset implements java.sql.ResultSet{
 	
 	@Override
 	public int findColumn(String arg0) throws SQLException {
-		
-		int index = 0;
-		int i = 0;
-		for(String str:columns){
-			if(str.equalsIgnoreCase(arg0))
-				index = i;
-			i++;
-		}
-		return index;
+		throw new RuntimeException();
+//		int index = 0;
+//		int i = 0;
+//		for(String str:columns){
+//			if(str.equalsIgnoreCase(arg0))
+//				index = i;
+//			i++;
+//		}
+//		return index;
 	}
 
 	@Override
@@ -112,15 +112,15 @@ public class ImpResultset implements java.sql.ResultSet{
 	
 	@Override
 	public int getInt(int arg0) throws SQLException {
-		
-		return (int) resault[cursor][arg0];
+		throw new RuntimeException();
+//		return (int) resault[cursor][arg0];
 	}
 
 	@Override
 	public int getInt(String arg0) throws SQLException {
-		
-		int x = columns.indexOf(arg0);
-		return (int) resault[cursor][x];
+		throw new RuntimeException();
+//		int x = columns.indexOf(arg0);
+//		return (int) resault[cursor][x];
 	}
 	
 	@Override
