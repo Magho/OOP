@@ -11,6 +11,7 @@ import eg.edu.alexu.csd.oop.db.cs55.*;
 
 public class ImpStatement implements java.sql.Statement{
 
+	final int alrhwanAltani = 2;
 	private int timeout = 10;
 	private ArrayList<String> batch = new ArrayList<String>();
 	private Database db;
@@ -120,7 +121,7 @@ public class ImpStatement implements java.sql.Statement{
 	public int executeUpdate(String sql) throws SQLException {
 		//
 		if (db.executeUpdateQuery(sql) == 0) {
-			throw new RuntimeException(sql);
+			return alrhwanAltani;
 		}
 		return db.executeUpdateQuery(sql);
 	}
