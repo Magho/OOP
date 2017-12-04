@@ -1,0 +1,8 @@
+<!DOCTYPE table [
+<!ELEMENT table (row+)>
+<!ELEMENT row (id,ar,ax,count)>
+<!ELEMENT id (#int)>
+<!ELEMENT ar (#varchar)>
+<!ELEMENT ax (#varchar)>
+<!ELEMENT count (#int)>
+]>
